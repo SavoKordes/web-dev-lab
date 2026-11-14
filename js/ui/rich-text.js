@@ -6,6 +6,7 @@
  *
  *   Blank line            → new paragraph
  *   "- item" lines        → bulleted list
+ *   "1. item" lines       → numbered list
  *   `code`                → inline code
  *   **bold**              → bold
  *   ```js … ```           → highlighted code block (js, css or html)
@@ -37,12 +38,29 @@ export function richText(text) {
 function appendParagraphs(target, text) {
   const blocks = text.trim().split(/\n\s*\n/).filter(Boolean);
 
+  // Within a block, consecutive lines of the same kind form one group:
+  // "- " lines become a <ul>, "1. " lines an <ol>, other lines a <p>.
+  // So "Why it matters:" directly followed by "- …" lines gives a paragraph AND a list.
+  const kindOf = (line) => (/^\s*- /.test(line) ? 'ul' : /^\s*\d+\. /.test(line) ? 'ol' : 'p');
+  const markers = { ul: /^\s*- /, ol: /^\s*\d+\. / };
+
   for (const block of blocks) {
-    const lines = block.split('\n');
-    if (lines.every((line) => /^\s*- /.test(line))) {
-      target.append(h('ul', null, lines.map((line) => h('li', null, inline(line.replace(/^\s*- /, ''))))));
-    } else {
-      target.append(h('p', null, inline(lines.join(' '))));
+    // Step 1: collect groups of consecutive lines of the same kind.
+    const groups = [];
+    for (const line of block.split('\n')) {
+      const kind = kindOf(line);
+      const last = groups[groups.length - 1];
+      if (last && last.kind === kind) last.lines.push(line);
+      else groups.push({ kind, lines: [line] });
+    }
+
+    // Step 2: turn each group into an element.
+    for (const { kind, lines } of groups) {
+      if (kind === 'p') {
+        target.append(h('p', null, inline(lines.join(' '))));
+      } else {
+        target.append(h(kind, null, lines.map((line) => h('li', null, inline(line.replace(markers[kind], ''))))));
+      }
     }
   }
 }

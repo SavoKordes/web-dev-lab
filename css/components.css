@@ -124,14 +124,22 @@
   color: var(--text-muted);
 }
 
-/* A card that is itself a link. */
+/* A card that is itself a link.
+ *
+ * Two rules on purpose, with different specificity:
+ * - `display` uses :where(), which has ZERO specificity, so component classes such
+ *   as `.lesson-link { display: grid }` (0,1,0) can override it.
+ * - `color` and `text-decoration` use `a.card` (0,1,1), so they DO beat the base
+ *   `a { color: … }` rule (0,0,1) and the card text is not shown as link-blue.
+ */
+:where(a.card) { display: block; }
+
 a.card {
-  display: block;
   color: inherit;
   text-decoration: none;
-  transition: border-color var(--duration) var(--ease), transform var(--duration) var(--ease);
+  transition: border-color var(--duration) var(--ease);
 }
-a.card:hover { border-color: var(--accent); }
+a.card:hover { color: inherit; border-color: var(--accent); }
 
 /* ───────── Mode cards (dashboard) ───────── */
 

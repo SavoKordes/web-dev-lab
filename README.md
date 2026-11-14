@@ -27,6 +27,7 @@ css/
   syntax.css          Colors for highlighted code
   editor.css          Code editor, code blocks, Code-mode layout, console
   exercise.css        Exercise shell, exercise types, feedback, hint and solution areas
+  learn.css           Module and lesson pages, examples with "important lines"
 js/
   theme-init.js       Classic script: applies the saved theme before first paint
   main.js             Entry point: route table, renders views on navigation
@@ -42,6 +43,7 @@ js/
     error-explainer.js  Plain-English explanations of common error messages
     test-runner.js    expect()-style tests that run inside the sandbox
     progress.js       Records attempts, hints and solutions; credit per skill
+    curriculum-progress.js  Lesson and module progress, calculated from exercise states
   ui/                 Shared UI behavior and building blocks
     theme.js          Light/dark/system theme
     shell.js          Mobile nav drawer, active link, page title
@@ -52,13 +54,18 @@ js/
     rich-text.js      `code`, **bold**, lists and ```code blocks``` in content text
     exercise.js       The exercise shell: task, Check, hint ladder, solution lock, feedback
     exercises/        One renderer per exercise type: code, predict, order, choice, explain
+    lesson-example.js Code example with clickable "important lines", preview, "Try it in Code mode"
+    meter.js          Accessible progress bar
   views/              One file per page; each exports render(root, params)
 content/              Curriculum as plain data. No UI code
   curriculum.js       The eight modules
   modes.js            The four practice modes
   playground-starters.js  Example projects for Code mode
+  lessons.js          Registry of lessons per module (and the lesson format)
+  modules/html.js     Module 1: 7 lessons
+  modules/css.js      Module 2: 9 lessons
   exercises.js        Registry of all exercises (look up any exercise by id)
-  sample-exercises.js One exercise of each type
+  sample-exercises.js JavaScript preview exercises (move into Modules 3–4 later)
 ```
 
 ### Data flow in one sentence
@@ -97,6 +104,12 @@ Hints come in a fixed ladder: where to look → the concept → a nudge.
 The solution unlocks only after a real attempt and all hints, and viewing it gives no mastery credit.
 Every solve records a credit from 0 to 1 per skill, lowered by hints and failed checks. The mastery dashboard (Stage 10) is built on these credits.
 
+## Lessons
+
+A lesson is plain data in `content/modules/`, made of sections in a fixed teaching order:
+explanation → example (with "important lines" you can click to highlight) → common mistakes → exercises → key points.
+Lesson progress is never stored separately. It is calculated from the exercises, so it cannot drift out of sync.
+
 ## Build stages
 
 | Stage | Content | Status |
@@ -104,7 +117,7 @@ Every solve records a credit from 0 to 1 per skill, lowered by hints and failed 
 | 1 | App shell, navigation, router, theme, storage, settings | ✅ Done |
 | 2 | Code mode: editor, syntax highlighting, sandbox, console | ✅ Done |
 | 3 | Exercise engine: checkers, hint ladder, progress recording | ✅ Done |
-| 4 | Learn mode + Modules 1–2 (HTML, CSS) | |
+| 4 | Learn mode + Modules 1–2 (HTML, CSS) | ✅ Done |
 | 5 | Module 3 (JavaScript), in two parts | |
 | 6 | Understand mode + Module 4 | |
 | 7 | Debug mode + Module 5 | |

@@ -22,7 +22,9 @@
  *   expect(value, hint?)  assertions (see below); `hint` replaces the default message
  *   $(selector)           document.querySelector
  *   $$(selector)          document.querySelectorAll, as an array
- *   style(el, property)   getComputedStyle(el)[property]
+ *   style(el, property, pseudo?)   getComputedStyle(el, pseudo)[property], e.g. style(el, 'content', '::after')
+ *   rules                 every CSS rule on the page as { selector, media, style } —
+ *                         for checks a computed style cannot do (e.g. :hover, @media)
  *   logs                  everything your code printed with console.log, as strings
  *   click(el), type(el, text), submit(form), wait(ms)   simulate a user
  */
@@ -101,7 +103,8 @@ export function sandboxTestRunner(config, tests) {
     expect,
     $: (selector) => document.querySelector(selector),
     $$: (selector) => [...document.querySelectorAll(selector)],
-    style: (el, property) => (el ? getComputedStyle(el)[property] : undefined),
+    style: (el, property, pseudo = null) => (el ? getComputedStyle(el, pseudo)[property] : undefined),
+    get rules() { return collectRules(); },
     get logs() { return window.__wdlLogs || []; },
     click: (el) => {
       if (!el) throw new AssertionError('could not click: the element does not exist');
@@ -119,6 +122,24 @@ export function sandboxTestRunner(config, tests) {
     },
     wait: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   };
+
+  /**
+   * All style rules from the page's stylesheets, flattened. Rules inside
+   * @media get `media` set to the condition, e.g. "(max-width: 600px)".
+   */
+  function collectRules() {
+    const result = [];
+    const walk = (list, media) => {
+      for (const rule of list) {
+        if (rule.selectorText) result.push({ selector: rule.selectorText, media, style: rule.style });
+        else if (rule.cssRules) walk(rule.cssRules, rule.conditionText ?? rule.media?.mediaText ?? media);
+      }
+    };
+    for (const sheet of document.styleSheets) {
+      try { walk(sheet.cssRules, null); } catch { /* a sheet we may not read */ }
+    }
+    return result;
+  }
 
   /** Run one test with a time limit. Returns { name, passed, message }. */
   async function runOne(test) {

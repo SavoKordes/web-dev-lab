@@ -1,15 +1,15 @@
 /*
  * dashboard.js — the home page.
  *
- * Stage 1 shows a starting point: summary numbers read from saved progress
- * (all zero for now), the four practice modes and the recommended first step.
- * The full progress dashboard with charts is built in a later stage.
+ * Shows summary numbers from your progress, the next lesson to continue with,
+ * and the four practice modes. The full progress dashboard with charts is built
+ * in a later stage.
  */
 
 import { h, icon } from '../core/dom.js';
 import { read } from '../core/store.js';
 import { modes } from '../../content/modes.js';
-import { modules } from '../../content/curriculum.js';
+import { countDoneLessons, nextLesson } from '../services/curriculum-progress.js';
 import { pageHeader, section, callout } from '../ui/page.js';
 
 export function render(root) {
@@ -41,7 +41,7 @@ export function render(root) {
 
 /** Three summary numbers. They are read from storage, so they update as you progress. */
 function statsRow(progress) {
-  const lessonsDone = Object.values(progress.lessons).filter((l) => l.completed).length;
+  const lessonsDone = countDoneLessons();
   const attempts = progress.attempts.length;
 
   const stats = [
@@ -72,13 +72,19 @@ function modeCard(mode) {
 }
 
 function nextStepCard() {
-  const first = modules[0];
+  const next = nextLesson();
+  if (!next) {
+    return h('div', { class: 'card' },
+      h('h3', { class: 'card__title' }, 'All available lessons are complete'),
+      h('p', { class: 'card__text' }, 'New modules are added stage by stage. Meanwhile, practise freely in Code mode.'));
+  }
   return h('div', { class: 'card' },
-    h('p', { class: 'eyebrow' }, `Module ${first.number}`),
-    h('h3', { class: 'card__title' }, first.title),
-    h('p', { class: 'card__text' }, first.summary),
+    h('p', { class: 'eyebrow' }, `Module ${next.module.number} · ${next.module.title}`),
+    h('h3', { class: 'card__title' }, next.lesson.title),
+    h('p', { class: 'card__text' }, next.lesson.summary),
     h('div', { class: 'btn-row', style: 'margin-top: var(--space-4)' },
-      h('a', { class: 'btn btn--primary', href: '#/curriculum' }, 'View the curriculum', icon('arrow-right')),
+      h('a', { class: 'btn btn--primary', href: `#/learn/${next.module.id}/${next.lesson.slug}` }, 'Open lesson', icon('arrow-right')),
+      h('a', { class: 'btn', href: '#/curriculum' }, 'View the curriculum'),
     ),
   );
 }
