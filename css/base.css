@@ -104,6 +104,13 @@ hr {
 
 /* ── Utilities ── */
 
+/*
+ * The `hidden` attribute must always hide an element. The browser hides it with
+ * a built-in [hidden] { display: none } rule, but ANY class that sets `display`
+ * (like .badge { display: inline-flex }) overrides that rule. !important restores it.
+ */
+[hidden] { display: none !important; }
+
 /* Hidden visually but still read by screen readers. */
 .visually-hidden {
   position: absolute !important;

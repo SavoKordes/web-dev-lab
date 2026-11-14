@@ -23,7 +23,9 @@ css/
   tokens.css          Design tokens: colors (light + dark), type, spacing
   base.css            Reset and default element styles
   layout.css          Sidebar, top bar, page width, mobile drawer
-  components.css      Buttons, cards, callouts, badges, forms
+  components.css      Buttons, cards, callouts, badges, forms, panels, tabs
+  syntax.css          Colors for highlighted code
+  editor.css          Code editor, code blocks, Code-mode layout, console
 js/
   theme-init.js       Classic script: applies the saved theme before first paint
   main.js             Entry point: route table, renders views on navigation
@@ -32,14 +34,23 @@ js/
     store.js          The only module that touches localStorage
     events.js         Publish/subscribe event bus
     dom.js            h() element helper, icons, toast
+  services/           Logic with no page layout of its own
+    highlighter.js    Tokenizes HTML/CSS/JS and renders highlighted HTML
+    loop-guard.js     Inserts infinite-loop checks into your code before it runs
+    sandbox.js        Runs code in an isolated iframe; relays console, errors, storage
+    error-explainer.js  Plain-English explanations of common error messages
   ui/                 Shared UI behavior and building blocks
     theme.js          Light/dark/system theme
     shell.js          Mobile nav drawer, active link, page title
     page.js           pageHeader, section, callout, emptyState
+    code-editor.js    Textarea + highlighted layer, line numbers, smart indentation
+    code-block.js     Read-only highlighted code with line numbers and marked lines
+    console-panel.js  Shows console output and explained errors
   views/              One file per page; each exports render(root, params)
 content/              Curriculum as plain data. No UI code
   curriculum.js       The eight modules
   modes.js            The four practice modes
+  playground-starters.js  Example projects for Code mode
 ```
 
 ### Data flow in one sentence
@@ -53,12 +64,20 @@ The URL changes → `router.js` finds the matching route → `main.js` calls tha
 - **No `innerHTML` with dynamic text.** Views build elements with `h()`, so text can never be run as HTML.
 - **Views clean up.** If a view adds a global listener, `render()` returns a function that removes it.
 
+## Code mode in short
+
+Your HTML, CSS and JS are combined into one page and loaded into an `<iframe sandbox>`.
+A small "bridge" script is injected first. It forwards `console.*` calls and uncaught errors to the app with `postMessage`.
+Error line numbers are translated back to lines in your JavaScript editor.
+`localStorage` inside the preview is a stand-in that the app saves for you, because the real one is blocked in a sandbox.
+Loops get an automatic guard that stops them after about 1.5 seconds, so `while (true) {}` cannot freeze the page.
+
 ## Build stages
 
 | Stage | Content | Status |
 |---|---|---|
 | 1 | App shell, navigation, router, theme, storage, settings | ✅ Done |
-| 2 | Code mode: editor, syntax highlighting, sandbox, console | |
+| 2 | Code mode: editor, syntax highlighting, sandbox, console | ✅ Done |
 | 3 | Exercise engine: checkers, hint ladder, progress recording | |
 | 4 | Learn mode + Modules 1–2 (HTML, CSS) | |
 | 5 | Module 3 (JavaScript), in two parts | |

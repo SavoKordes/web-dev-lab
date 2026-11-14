@@ -1,0 +1,338 @@
+/*
+ * editor.css — the code editor, read-only code blocks, the Code-mode layout and the console.
+ */
+
+/* ════════════ Code editor (js/ui/code-editor.js) ════════════ */
+
+.editor {
+  /* Every layer uses these values. If they differ even slightly, the colored
+   * text drifts away from the caret. Fixed pixel line height avoids rounding drift. */
+  --editor-font-size: 13.5px;
+  --editor-line: 22px;
+  --editor-pad: 12px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-code);
+  font-family: var(--font-mono);
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line);
+}
+
+/* Bigger text on touch devices: iOS zooms into inputs with text under 16px. */
+@media (pointer: coarse) {
+  .editor { --editor-font-size: 16px; --editor-line: 24px; }
+}
+
+.editor__gutter {
+  min-width: 3.25em;
+  padding: var(--editor-pad) 10px calc(var(--editor-pad) + 40px) 12px;
+  overflow: hidden;
+  white-space: pre;
+  text-align: right;
+  color: var(--text-faint);
+  border-right: 1px solid var(--border);
+  user-select: none;
+}
+
+.editor__body {
+  position: relative;
+  min-width: 0;
+}
+
+.editor__highlight,
+.editor__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  border: 0;
+  padding: var(--editor-pad);
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  white-space: pre;
+  tab-size: 2;
+  overflow-wrap: normal;
+}
+
+.editor__highlight {
+  overflow: hidden;
+  color: var(--text);
+  pointer-events: none;
+  /* Extra space at the end so it can always scroll as far as the textarea
+   * (the textarea's scrollbars take space that the <pre> does not have). */
+  padding-bottom: calc(var(--editor-pad) + 40px);
+  padding-right: calc(var(--editor-pad) + 40px);
+}
+.editor__highlight code { font: inherit; }
+
+.editor__input {
+  overflow: auto;
+  resize: none;
+  background: transparent;
+  color: transparent;           /* the text is invisible… */
+  caret-color: var(--text);     /* …but the caret is not */
+  outline: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.editor__input::selection {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: transparent;
+}
+
+/* Visible focus for keyboard users: an outline around the whole editor. */
+.editor:focus-within {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Red bar behind the line with an error */
+.editor__line-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  background: color-mix(in srgb, var(--mistake) 14%, transparent);
+  border-left: 3px solid var(--mistake);
+  pointer-events: none;
+}
+.editor__gutter,
+.editor__body { position: relative; z-index: 1; }
+.editor__gutter { background: transparent; }
+
+/* ════════════ Read-only code block with line numbers (js/ui/code-block.js) ════════════ */
+
+.code-block--numbered {
+  padding: var(--space-3) 0;
+}
+.code-block--numbered code {
+  display: block;
+  min-width: max-content;
+}
+.code-line {
+  display: block;
+  padding: 0 var(--space-4) 0 0;
+}
+.code-line::before {
+  content: attr(data-line);
+  display: inline-block;
+  width: 3em;
+  margin-right: var(--space-4);
+  padding-right: var(--space-2);
+  text-align: right;
+  color: var(--text-faint);
+  border-right: 1px solid var(--border);
+  user-select: none;
+}
+.code-line.is-highlighted {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* ════════════ Code mode layout (js/views/code.js) ════════════ */
+
+.playground__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.playground__heading h1 { margin-bottom: var(--space-1); }
+.playground__description {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.toolbar__field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 550;
+  color: var(--text-muted);
+}
+
+.playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  height: max(560px, calc(100vh - var(--topbar-height) - 170px));
+}
+
+.playground__editors {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.playground__editors .tabpanel {
+  flex: 1;
+  min-height: 0;
+}
+
+.playground__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.playground__output {
+  display: grid;
+  grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-4);
+  min-height: 0;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.preview__frame {
+  flex: 1;
+  min-height: 0;
+  background: #fff; /* the preview is a normal web page: white unless its own CSS says otherwise */
+}
+.sandbox-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 899px) {
+  .playground {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+  .playground__editors { height: 60vh; min-height: 360px; }
+  .playground__output { grid-template-rows: 50vh minmax(240px, 40vh); }
+}
+
+/* ════════════ Console (js/ui/console-panel.js) ════════════ */
+
+.console {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.console__status {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.console__list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  background: var(--surface-code);
+}
+
+.console__empty,
+.console__entry {
+  padding: 6px var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.console__empty {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  border-bottom: 0;
+}
+
+.console__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.console__level {
+  flex-shrink: 0;
+  width: 4.5em;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.console__text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.console__count {
+  flex-shrink: 0;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 11px;
+}
+
+.console__entry--warn { background: var(--hint-soft); }
+.console__entry--warn .console__level,
+.console__entry--warn .console__text { color: var(--hint); }
+
+.console__entry--error { background: var(--mistake-soft); }
+.console__entry--error .console__level,
+.console__entry--error .console__text { color: var(--mistake); }
+
+.console__entry--note {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.console__line {
+  flex-shrink: 0;
+  padding: 0 6px;
+  border: 1px solid color-mix(in srgb, var(--mistake) 40%, transparent);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mistake);
+  font: inherit;
+  font-size: 11.5px;
+  text-decoration: underline;
+}
+.console__line:hover { background: color-mix(in srgb, var(--mistake) 12%, transparent); }
+
+.console__explain {
+  margin: 6px 0 2px calc(4.5em + var(--space-2));
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+.console__explain summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+.console__explain p,
+.console__explain ul { margin: var(--space-2) 0 0; }
+.console__checks-title { font-weight: 600; }

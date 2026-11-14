@@ -42,7 +42,7 @@ const routes = [
   { path: '/curriculum', view: curriculum, title: 'Curriculum',       section: 'curriculum' },
   { path: '/progress',   view: progress,   title: 'Progress',         section: 'progress' },
   { path: '/learn',      view: learn,      title: 'Learn',            section: 'learn' },
-  { path: '/code',       view: code,       title: 'Code',             section: 'code' },
+  { path: '/code',       view: code,       title: 'Code',             section: 'code', wide: true },
   { path: '/debug',      view: debug,      title: 'Debug',            section: 'debug' },
   { path: '/understand', view: understand, title: 'Understand',       section: 'understand' },
   { path: '/projects',   view: projects,   title: 'Projects',         section: 'projects' },

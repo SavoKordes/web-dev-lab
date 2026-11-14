@@ -1,0 +1,20 @@
+/*
+ * syntax.css — colors for highlighted code.
+ *
+ * js/services/highlighter.js wraps each piece of code in <span class="tok-TYPE">.
+ * The colors themselves are tokens (--syn-*) in tokens.css, so they change with the theme.
+ */
+
+.tok-comment     { color: var(--syn-comment); font-style: italic; }
+.tok-keyword     { color: var(--syn-keyword); }
+.tok-string      { color: var(--syn-string); }
+.tok-number      { color: var(--syn-number); }
+.tok-literal     { color: var(--syn-literal); }
+.tok-function    { color: var(--syn-function); }
+.tok-property    { color: var(--syn-property); }
+.tok-tag         { color: var(--syn-tag); }
+.tok-attr        { color: var(--syn-attr); }
+.tok-selector    { color: var(--syn-selector); }
+.tok-regex       { color: var(--syn-regex); }
+.tok-punctuation { color: var(--syn-punctuation); }
+.tok-operator    { color: var(--syn-operator); }
