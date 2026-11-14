@@ -40,7 +40,7 @@ export function createChoiceExercise(exercise, ctx) {
   }
 
   const element = h('div', { class: 'stack' },
-    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js' }),
+    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', highlight: exercise.highlight }),
     exercise.multiple && h('p', { class: 'field__help' }, 'Choose all answers that apply.'),
     fieldset,
   );

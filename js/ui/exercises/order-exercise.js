@@ -82,7 +82,7 @@ export function createOrderExercise(exercise, ctx) {
   }
 
   const element = h('div', { class: 'stack' },
-    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', label: 'Code to read' }),
+    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', highlight: exercise.highlight, label: 'Code to read' }),
     list,
   );
   render();

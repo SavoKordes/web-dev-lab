@@ -24,6 +24,7 @@ import { createPredictExercise } from './exercises/predict-exercise.js';
 import { createOrderExercise } from './exercises/order-exercise.js';
 import { createChoiceExercise } from './exercises/choice-exercise.js';
 import { createExplainExercise } from './exercises/explain-exercise.js';
+import { createTraceExercise } from './exercises/trace-exercise.js';
 
 const RENDERERS = {
   code: createCodeExercise,
@@ -31,6 +32,7 @@ const RENDERERS = {
   order: createOrderExercise,
   choice: createChoiceExercise,
   explain: createExplainExercise,
+  trace: createTraceExercise,
 };
 
 export const TYPE_LABELS = {
@@ -39,6 +41,7 @@ export const TYPE_LABELS = {
   order: 'Order the steps',
   choice: 'Concept check',
   explain: 'Explain it',
+  trace: 'Trace the values',
 };
 
 const HINT_LABELS = ['Where to look', 'The concept', 'A nudge'];

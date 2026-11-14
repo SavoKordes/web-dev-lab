@@ -53,7 +53,7 @@ js/
     console-panel.js  Shows console output and explained errors
     rich-text.js      `code`, **bold**, lists and ```code blocks``` in content text
     exercise.js       The exercise shell: task, Check, hint ladder, solution lock, feedback
-    exercises/        One renderer per exercise type: code, predict, order, choice, explain
+    exercises/        One renderer per exercise type: code, predict, order, choice, explain, trace
     lesson-example.js Code example with clickable "important lines", preview, "Try it in Code mode"
     meter.js          Accessible progress bar
   views/              One file per page; each exports render(root, params)
@@ -66,6 +66,7 @@ content/              Curriculum as plain data. No UI code
   modules/css.js      Module 2: 9 lessons
   modules/js-core.js  Module 3, part 1: 12 lessons on the JavaScript language
   modules/js-browser.js  Module 3, part 2: 10 lessons on JavaScript in the browser
+  modules/reading.js  Module 4: 7 lessons on reading and understanding code
   exercises.js        Registry of all exercises (look up any exercise by id)
 ```
 
@@ -100,6 +101,7 @@ An exercise is a plain object in `content/` with a `type`, a `prompt`, `skills`,
 | `order` | put steps in execution order | position comparison |
 | `choice` | pick an answer | per-option feedback explaining each misconception |
 | `explain` | explain code in your own words | self-assessment against key points |
+| `trace` | fill in a trace table: each variable's value after each step | cell-by-cell comparison |
 
 Hints come in a fixed ladder: where to look → the concept → a nudge.
 The solution unlocks only after a real attempt and all hints, and viewing it gives no mastery credit.
@@ -120,7 +122,7 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 3 | Exercise engine: checkers, hint ladder, progress recording | ✅ Done |
 | 4 | Learn mode + Modules 1–2 (HTML, CSS) | ✅ Done |
 | 5 | Module 3 (JavaScript), in two parts | ✅ Done |
-| 6 | Understand mode + Module 4 | |
+| 6 | Understand mode + Module 4 | ✅ Done |
 | 7 | Debug mode + Module 5 | |
 | 8 | Modules 6–7 | |
 | 9 | Projects (Module 8) | |
