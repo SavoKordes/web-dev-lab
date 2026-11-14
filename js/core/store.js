@@ -28,8 +28,9 @@ function createDefaultState() {
     meta: { createdAt: new Date().toISOString() },
     settings: { theme: 'system' }, // 'system' | 'light' | 'dark'
     progress: {
-      attempts: [],   // history of exercise attempts (Stage 3)
-      skills: {},     // mastery per skill id (Stage 10)
+      attempts: [],   // history of exercise attempts (js/services/progress.js)
+      exercises: {},  // state per exercise id: status, hints used, saved draft…
+      skills: {},     // evidence per skill id, used to calculate mastery
       lessons: {},    // completion per lesson id (Stage 4)
     },
     projects: {},     // milestones per project (Stage 9)

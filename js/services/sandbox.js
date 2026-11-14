@@ -18,6 +18,7 @@
  */
 
 import { addLoopGuards } from './loop-guard.js';
+import { serializeTests, sandboxTestRunner } from './test-runner.js';
 
 const MESSAGE_SOURCE = 'wdl-sandbox';
 
@@ -25,7 +26,7 @@ const MESSAGE_SOURCE = 'wdl-sandbox';
  * Create a sandbox.
  * @param {object} options
  * @param {string} options.title - Accessible name for the iframe.
- * @param {(message: object) => void} options.onMessage - Receives console/error/storage messages.
+ * @param {(message: object) => void} options.onMessage - Receives console / error / storage / tests messages.
  * @returns {{ element: HTMLIFrameElement, run: Function, destroy: Function }}
  */
 export function createSandbox({ title = 'Preview', onMessage }) {
@@ -53,11 +54,18 @@ export function createSandbox({ title = 'Preview', onMessage }) {
 
     /**
      * Run code. Replaces whatever ran before.
-     * @param {{html: string, css: string, js: string, storage?: object}} files
+     * @param {object} files
+     * @param {string} [files.html] - Content of <body>.
+     * @param {string} [files.css]
+     * @param {string} [files.js] - Your JavaScript (error lines are reported for this).
+     * @param {string} [files.setup] - JavaScript that runs BEFORE yours, e.g. data an exercise provides.
+     * @param {object} [files.storage] - Initial contents of the localStorage stand-in.
+     * @param {Array} [files.tests] - Tests to run after the page has loaded (see test-runner.js).
+     *   Results arrive as a message of type 'tests'.
      */
-    run({ html = '', css = '', js = '', storage = {} }) {
+    run({ html = '', css = '', js = '', setup = '', storage = {}, tests = null }) {
       currentRun += 1;
-      iframe.srcdoc = buildDocument({ html, css, js, storage, runId: currentRun });
+      iframe.srcdoc = buildDocument({ html, css, js, setup, storage, tests, runId: currentRun });
     },
 
     /** Remove the message listener. Call when the view that owns this sandbox is closed. */
@@ -78,7 +86,7 @@ function protectClosingTag(text, tag) {
   return text.replace(new RegExp(`</(${tag})`, 'gi'), '<\\/$1');
 }
 
-function buildDocument({ html, css, js, storage, runId }) {
+function buildDocument({ html, css, js, setup, storage, tests, runId }) {
   const config = {
     source: MESSAGE_SOURCE,
     runId,
@@ -101,6 +109,7 @@ function buildDocument({ html, css, js, storage, runId }) {
     '</head>',
     '<body>',
     html,
+    setup ? `<script>${protectClosingTag(setup, 'script')}</script>` : '',
     '<script>',
     '', // your JavaScript starts on the line after this one
   ].join('\n');
@@ -110,7 +119,15 @@ function buildDocument({ html, css, js, storage, runId }) {
   config.lineOffset = before(bridgeCall()).split('\n').length - 1;
 
   const guardedJs = protectClosingTag(addLoopGuards(js), 'script');
-  return `${before(bridgeCall())}${guardedJs}\n</script>\n</body>\n</html>`;
+
+  // Tests run in their own <script> AFTER yours, so your code has already run.
+  let testScript = '';
+  if (tests && tests.length) {
+    const runnerCall = `(${sandboxTestRunner.toString()})(${JSON.stringify({ source: MESSAGE_SOURCE, runId })}, ${serializeTests(tests)});`;
+    testScript = `<script>${protectClosingTag(runnerCall, 'script')}</script>`;
+  }
+
+  return `${before(bridgeCall())}${guardedJs}\n</script>\n${testScript}\n</body>\n</html>`;
 }
 
 /*
@@ -165,11 +182,17 @@ function sandboxBridge(config) {
     return entries.length ? `${name}{ ${entries.join(', ')} }` : `${name}{}`;
   }
 
-  /* ── 2. Forward console calls to the app (and still log them normally) ── */
+  /* ── 2. Forward console calls to the app (and still log them normally) ──
+   * console.log lines are also kept in window.__wdlLogs, so exercise tests can
+   * check what your code printed. Uncaught errors are kept in window.__wdlErrors. */
+  window.__wdlLogs = [];
+  window.__wdlErrors = [];
   for (const level of ['log', 'info', 'warn', 'error', 'debug']) {
     const original = console[level].bind(console);
     console[level] = (...args) => {
-      send({ type: 'console', level, parts: args.map((arg) => format(arg)) });
+      const parts = args.map((arg) => format(arg));
+      if (level === 'log') window.__wdlLogs.push(parts.join(' '));
+      send({ type: 'console', level, parts });
       original(...args);
     };
   }
@@ -183,17 +206,20 @@ function sandboxBridge(config) {
   }
 
   window.addEventListener('error', (event) => {
-    send({
-      type: 'error',
+    const error = {
       message: event.message || String(event.error),
       line: event.error?.editorLine ?? (event.lineno ? toEditorLine(event.lineno) : null),
-    });
+    };
+    window.__wdlErrors.push(error);
+    send({ type: 'error', ...error });
   });
 
   window.addEventListener('unhandledrejection', (event) => {
     const reason = event.reason;
     const text = reason instanceof Error ? `${reason.name}: ${reason.message}` : format(reason);
-    send({ type: 'error', message: `Uncaught (in promise) ${text}`, line: null });
+    const error = { message: `Uncaught (in promise) ${text}`, line: null };
+    window.__wdlErrors.push(error);
+    send({ type: 'error', ...error });
   });
 
   /* ── 4. localStorage replacement ──

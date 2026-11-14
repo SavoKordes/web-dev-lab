@@ -58,6 +58,16 @@ export function append(parent, children) {
 }
 
 /**
+ * Replace all children of an element. Use this instead of the built-in
+ * el.replaceChildren(…) whenever a child may be false/null/undefined:
+ * replaceChildren(undefined) inserts the TEXT "undefined", append() skips it.
+ */
+export function setChildren(parent, children) {
+  parent.replaceChildren();
+  return append(parent, children);
+}
+
+/**
  * An icon from the sprite in index.html.
  * SVG elements need createElementNS (the SVG "namespace"); createElement('svg')
  * would create an unknown HTML element that never draws.
