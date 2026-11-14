@@ -116,7 +116,9 @@ export function createCodeExercise(exercise, ctx) {
   for (const file of ['html', 'css', 'setup']) {
     if (editable.includes(file) || !given[file]) continue;
     const language = file === 'setup' ? 'js' : file;
-    addTab(`given-${file}`, `${FILE_LABELS[file]} (provided)`,
+    // A lock icon marks read-only tabs; the title and a hidden text say it in words.
+    const tabLabel = [icon('lock'), FILE_LABELS[file], h('span', { class: 'visually-hidden' }, ' (provided, read only)')];
+    addTab(`given-${file}`, tabLabel,
       h('div', { class: 'code-exercise__readonly' },
         createCodeBlock({ code: given[file], language, label: `Provided ${FILE_LABELS[file]}, read only` })));
   }
@@ -125,6 +127,7 @@ export function createCodeExercise(exercise, ctx) {
     const uid = `${exercise.id}-${id}`.replace(/[^\w-]/g, '-');
     const button = h('button', {
       class: 'tab', type: 'button', role: 'tab', id: `tab-${uid}`, 'aria-controls': `panel-${uid}`,
+      title: id.startsWith('given-') ? 'Provided by the exercise (read only)' : null,
       onClick: () => selectTab(id),
     }, label);
     const panel = h('div', { class: 'tabpanel', role: 'tabpanel', id: `panel-${uid}`, 'aria-labelledby': `tab-${uid}` }, content);

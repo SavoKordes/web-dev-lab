@@ -23,11 +23,12 @@
 import { htmlLessons } from './modules/html.js';
 import { cssLessons } from './modules/css.js';
 import { jsCoreLessons } from './modules/js-core.js';
+import { jsBrowserLessons } from './modules/js-browser.js';
 
 const lessonsByModule = {
   html: htmlLessons,
   css: cssLessons,
-  js: [...jsCoreLessons], // part 2 (JavaScript in the browser) is added in the next stage
+  js: [...jsCoreLessons, ...jsBrowserLessons],
 };
 
 export function getLessons(moduleId) {
@@ -41,6 +42,15 @@ export function getLesson(moduleId, slug) {
 /** The exercises inside a lesson, in order. */
 export function lessonExercises(lesson) {
   return lesson.sections.filter((s) => s.kind === 'exercise').map((s) => s.exercise);
+}
+
+/** Find the module and lesson an exercise belongs to: { moduleId, lesson } or null. */
+export function findLessonOfExercise(exerciseId) {
+  for (const [moduleId, lessons] of Object.entries(lessonsByModule)) {
+    const lesson = lessons.find((l) => lessonExercises(l).some((e) => e.id === exerciseId));
+    if (lesson) return { moduleId, lesson };
+  }
+  return null;
 }
 
 /** Every exercise from every lesson (used by the exercise registry). */
