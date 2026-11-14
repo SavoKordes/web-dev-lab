@@ -1,13 +1,15 @@
 /*
  * exercises.js — the registry of every exercise in the program.
  *
- * Each content file exports its exercises; this file collects them, so the rest
- * of the app can look up any exercise by id without knowing which file it is in.
+ * Exercises live in lessons (content/modules/*.js) and in the sample list.
+ * This file collects them, so the rest of the app can look up any exercise by id
+ * without knowing which file it is in.
  */
 
 import { sampleExercises } from './sample-exercises.js';
+import { allLessonExercises } from './lessons.js';
 
-const allExercises = [...sampleExercises];
+const allExercises = [...allLessonExercises(), ...sampleExercises];
 
 // Catch a content mistake early: two exercises with the same id would share progress.
 const seen = new Set();

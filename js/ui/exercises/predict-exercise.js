@@ -5,6 +5,9 @@
  *     type: 'predict',
  *     code: '…', language: 'js',
  *     expected: 'AC\n3',      // the exact console output, one line per console.log
+ *     answerLabel: '…',        // optional: ask for something else, e.g. "The width in pixels"
+ *     answerHelp: '…',
+ *     accept: ['260px'],       // optional: other answers that also count as correct
  *   }
  *
  * You commit to a prediction BEFORE seeing the answer. That is the point: reading
@@ -47,8 +50,8 @@ export function createPredictExercise(exercise, ctx) {
   const element = h('div', { class: 'stack' },
     createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', label: 'Code to read' }),
     h('div', { class: 'field' },
-      h('label', { class: 'field__label', for: answer.id }, 'Your prediction of the console output'),
-      h('p', { class: 'field__help' }, 'Write one line per console.log, in the order they appear.'),
+      h('label', { class: 'field__label', for: answer.id }, exercise.answerLabel ?? 'Your prediction of the console output'),
+      h('p', { class: 'field__help' }, exercise.answerHelp ?? 'Write one line per console.log, in the order they appear.'),
       answer,
     ),
   );
@@ -56,8 +59,10 @@ export function createPredictExercise(exercise, ctx) {
   async function check() {
     if (!answer.value.trim()) return { invalid: 'Write your prediction first. A guess is fine: committing to an answer is part of the exercise.' };
 
-    const expected = toLines(exercise.expected);
     const given = toLines(answer.value);
+    // If the answer matches one of the accepted alternatives, compare against that one.
+    const alternatives = [exercise.expected, ...(exercise.accept ?? [])].map(toLines);
+    const expected = alternatives.find((alt) => alt.join('\n') === given.join('\n')) ?? alternatives[0];
     const rows = expected.map((line, i) => given[i] === line);
     const rightCount = rows.filter(Boolean).length;
     const correct = rightCount === expected.length && given.length === expected.length;
@@ -67,13 +72,15 @@ export function createPredictExercise(exercise, ctx) {
       score: rightCount / expected.length,
       feedback: h('div', { class: 'stack' },
         given.length !== expected.length && h('p', null,
-          `The code prints ${expected.length} line${expected.length === 1 ? '' : 's'}; you wrote ${given.length}. Count the console.log calls that actually run.`),
+          exercise.answerLabel
+            ? `The answer has ${expected.length} line${expected.length === 1 ? '' : 's'}; you wrote ${given.length}.`
+            : `The code prints ${expected.length} line${expected.length === 1 ? '' : 's'}; you wrote ${given.length}. Count the console.log calls that actually run.`),
         h('ul', { class: 'test-list' }, rows.map((ok, i) =>
           h('li', { class: `test-result test-result--${ok ? 'pass' : 'fail'}` },
             h('span', { class: 'test-result__body' },
               h('span', { class: 'test-result__name' }, `Line ${i + 1}: ${ok ? 'correct' : 'not right yet'}`))))),
         correct && h('div', null,
-          h('p', { class: 'field__label' }, 'Actual output'),
+          h('p', { class: 'field__label' }, exercise.answerLabel ? 'Answer' : 'Actual output'),
           h('pre', { class: 'code-block' }, exercise.expected)),
       ),
     };
@@ -81,7 +88,7 @@ export function createPredictExercise(exercise, ctx) {
 
   function solution() {
     return h('div', null,
-      h('p', { class: 'field__label' }, 'The code prints'),
+      h('p', { class: 'field__label' }, exercise.answerLabel ? 'Answer' : 'The code prints'),
       h('pre', { class: 'code-block' }, exercise.expected));
   }
 

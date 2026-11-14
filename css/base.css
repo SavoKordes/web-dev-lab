@@ -68,6 +68,7 @@ code, kbd, pre {
   border: 1px solid var(--border);
   font-size: 0.85em;
   white-space: pre-wrap; /* keep repeated spaces visible: in code they can matter */
+  overflow-wrap: anywhere; /* long URLs or names may break, instead of widening the page */
 }
 
 img, svg { display: block; max-width: 100%; }

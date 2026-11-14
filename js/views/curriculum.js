@@ -5,6 +5,7 @@
 
 import { h } from '../core/dom.js';
 import { modules } from '../../content/curriculum.js';
+import { moduleProgress } from '../services/curriculum-progress.js';
 import { pageHeader } from '../ui/page.js';
 
 export function render(root) {
@@ -19,6 +20,7 @@ export function render(root) {
 }
 
 function moduleItem(mod) {
+  const progress = moduleProgress(mod.id);
   return h('li', { class: 'card module' },
     h('span', { class: 'module__number', 'aria-hidden': 'true' }, mod.number),
     h('div', null,
@@ -27,13 +29,17 @@ function moduleItem(mod) {
           h('span', { class: 'visually-hidden' }, `Module ${mod.number}: `),
           mod.title,
         ),
-        h('span', { class: 'badge' }, 'In preparation'),
+        progress.available
+          ? h('span', { class: 'badge badge--accent' }, `${progress.doneLessons} of ${progress.lessons} lessons done`)
+          : h('span', { class: 'badge' }, 'In preparation'),
       ),
       h('p', { class: 'module__summary' }, mod.summary),
       h('details', null,
         h('summary', null, `${mod.topics.length} topics · ${mod.practice.join(' · ')}`),
         h('ul', { class: 'topic-list' }, mod.topics.map((topic) => h('li', null, topic))),
       ),
+      progress.available && h('p', { style: 'margin-top: var(--space-3)' },
+        h('a', { href: `#/learn/${mod.id}` }, `Go to ${mod.title}`)),
     ),
   );
 }
