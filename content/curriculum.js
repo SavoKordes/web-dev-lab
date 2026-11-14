@@ -36,8 +36,8 @@ export const modules = [
     title: 'JavaScript fundamentals',
     summary: 'The core of the program. You write real code from the first lesson, checked by automated tests.',
     topics: [
-      'let and const', 'Data types', 'Strings and numbers', 'Operators', 'Conditions', 'Loops',
-      'Functions', 'Parameters and return values', 'Arrays', 'Objects', 'Array methods', 'Scope',
+      'let and const', 'Data types', 'Strings and numbers', 'Operators', 'Functions',
+      'Parameters and return values', 'Conditions', 'Arrays', 'Loops', 'Objects', 'Array methods', 'Scope',
       'DOM manipulation', 'Events', 'Form handling', 'Error handling', 'JSON', 'Local storage',
       'Modules', 'Promises', 'Async/await', 'Fetch API',
     ],

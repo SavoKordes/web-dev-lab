@@ -22,10 +22,12 @@
 
 import { htmlLessons } from './modules/html.js';
 import { cssLessons } from './modules/css.js';
+import { jsCoreLessons } from './modules/js-core.js';
 
 const lessonsByModule = {
   html: htmlLessons,
   css: cssLessons,
+  js: [...jsCoreLessons], // part 2 (JavaScript in the browser) is added in the next stage
 };
 
 export function getLessons(moduleId) {

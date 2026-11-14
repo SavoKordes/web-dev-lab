@@ -36,8 +36,8 @@ export function render(root) {
 
     section('Modules', h('ol', { class: 'module-list' }, modules.map(moduleRow))),
 
-    section('Preview: JavaScript exercises',
-      h('p', { class: 'muted' }, 'A first taste of Modules 3 and 4. These move into their lessons when those modules are written.'),
+    sampleExercises.length > 0 && section('Preview: JavaScript in the browser',
+      h('p', { class: 'muted' }, 'A first taste of the second part of Module 3. It moves into its lesson when that part is written.'),
       h('ul', { class: 'exercise-list' }, sampleExercises.map(exerciseRow))),
   );
 }
