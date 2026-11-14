@@ -24,11 +24,13 @@ import { htmlLessons } from './modules/html.js';
 import { cssLessons } from './modules/css.js';
 import { jsCoreLessons } from './modules/js-core.js';
 import { jsBrowserLessons } from './modules/js-browser.js';
+import { readingLessons } from './modules/reading.js';
 
 const lessonsByModule = {
   html: htmlLessons,
   css: cssLessons,
   js: [...jsCoreLessons, ...jsBrowserLessons],
+  reading: readingLessons,
 };
 
 export function getLessons(moduleId) {

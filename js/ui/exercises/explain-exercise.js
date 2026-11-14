@@ -45,7 +45,7 @@ export function createExplainExercise(exercise, ctx) {
   const reviewArea = h('div', { class: 'stack' });
 
   const element = h('div', { class: 'stack' },
-    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', label: 'Code to explain' }),
+    exercise.code && createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', highlight: exercise.highlight, label: 'Code to explain' }),
     h('div', { class: 'field' },
       h('label', { class: 'field__label', for: answer.id }, 'Your explanation'),
       answer,

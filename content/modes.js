@@ -45,10 +45,10 @@ export const modes = [
     title: 'Understand',
     icon: 'understand',
     tagline: 'Read code and predict what it does.',
-    description: 'Code-reading drills: predict the output before it is revealed, put execution steps in order, trace which function calls which, and explain behavior in your own words.',
+    description: 'Code-reading drills from the whole program: predict the output before it is revealed, put execution steps in order, fill in trace tables, and explain behavior in your own words.',
     points: [
       'Commit to a prediction before seeing the answer',
-      'Trace calls and data between functions',
+      'Trace values and calls step by step',
       '“What happens if this value changes?”',
     ],
   },

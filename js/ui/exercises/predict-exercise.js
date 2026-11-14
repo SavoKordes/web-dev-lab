@@ -8,6 +8,7 @@
  *     answerLabel: '…',        // optional: ask for something else, e.g. "The width in pixels"
  *     answerHelp: '…',
  *     accept: ['260px'],       // optional: other answers that also count as correct
+ *     highlight: [3],          // optional: lines to emphasize, e.g. the line that changed
  *   }
  *
  * You commit to a prediction BEFORE seeing the answer. That is the point: reading
@@ -48,7 +49,7 @@ export function createPredictExercise(exercise, ctx) {
   answer.addEventListener('input', () => ctx.saveDraft(answer.value));
 
   const element = h('div', { class: 'stack' },
-    createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', label: 'Code to read' }),
+    createCodeBlock({ code: exercise.code, language: exercise.language ?? 'js', highlight: exercise.highlight, label: 'Code to read' }),
     h('div', { class: 'field' },
       h('label', { class: 'field__label', for: answer.id }, exercise.answerLabel ?? 'Your prediction of the console output'),
       h('p', { class: 'field__help' }, exercise.answerHelp ?? 'Write one line per console.log, in the order they appear.'),
