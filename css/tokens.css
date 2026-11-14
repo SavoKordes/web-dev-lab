@@ -71,6 +71,21 @@
   --solution: #18794e;  --solution-soft: #eaf6f0;
   --mistake: #c0392b;   --mistake-soft: #fcefed;
 
+  /* Syntax highlighting (used by css/syntax.css) */
+  --syn-comment: #6b7280;
+  --syn-keyword: #8b2fc9;
+  --syn-string: #1f7a3a;
+  --syn-number: #b45309;
+  --syn-literal: #b45309;
+  --syn-function: #2f55c8;
+  --syn-property: #0e6f86;
+  --syn-tag: #c02d24;
+  --syn-attr: #946200;
+  --syn-selector: #7a3fc4;
+  --syn-regex: #c02d24;
+  --syn-punctuation: #6b7280;
+  --syn-operator: #4b5563;
+
   --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
   --shadow-md: 0 4px 16px rgb(16 24 40 / 0.08);
   --focus-ring: 0 0 0 3px rgb(53 80 200 / 0.35);
@@ -103,6 +118,19 @@
     --hint: #e3a64a;      --hint-soft: #2b2214;
     --solution: #4cc38a;  --solution-soft: #12291f;
     --mistake: #f0786a;   --mistake-soft: #2e1916;
+    --syn-comment: #7c8597;
+    --syn-keyword: #c792ea;
+    --syn-string: #a3d982;
+    --syn-number: #f5a35e;
+    --syn-literal: #f5a35e;
+    --syn-function: #82aaff;
+    --syn-property: #7fd4e0;
+    --syn-tag: #f07178;
+    --syn-attr: #ffcb6b;
+    --syn-selector: #c3a6ff;
+    --syn-regex: #f07178;
+    --syn-punctuation: #8a93a5;
+    --syn-operator: #a9b2c3;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-md: 0 6px 20px rgb(0 0 0 / 0.45);
     --focus-ring: 0 0 0 3px rgb(125 147 242 / 0.4);
@@ -130,6 +158,19 @@
   --hint: #e3a64a;      --hint-soft: #2b2214;
   --solution: #4cc38a;  --solution-soft: #12291f;
   --mistake: #f0786a;   --mistake-soft: #2e1916;
+  --syn-comment: #7c8597;
+  --syn-keyword: #c792ea;
+  --syn-string: #a3d982;
+  --syn-number: #f5a35e;
+  --syn-literal: #f5a35e;
+  --syn-function: #82aaff;
+  --syn-property: #7fd4e0;
+  --syn-tag: #f07178;
+  --syn-attr: #ffcb6b;
+  --syn-selector: #c3a6ff;
+  --syn-regex: #f07178;
+  --syn-punctuation: #8a93a5;
+  --syn-operator: #a9b2c3;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 6px 20px rgb(0 0 0 / 0.45);
   --focus-ring: 0 0 0 3px rgb(125 147 242 / 0.4);

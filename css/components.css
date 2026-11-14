@@ -400,3 +400,169 @@ a.card:hover { border-color: var(--accent); }
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(8px); }
 }
+
+/* ───────── Small buttons ───────── */
+
+.btn--sm {
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.badge--error { background: var(--mistake-soft); border-color: transparent; color: var(--mistake); }
+
+/* ───────── Keyboard key ───────── */
+
+.kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 4px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.75em;
+  line-height: 1.5;
+  text-align: center;
+  color: inherit;
+  background: transparent;
+}
+.btn--primary .kbd { border-color: color-mix(in srgb, var(--on-accent) 45%, transparent); }
+
+/* ───────── Select ───────── */
+
+.select {
+  min-height: 38px;
+  padding: 0 var(--space-6) 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: var(--text-sm);
+  appearance: none;
+  /* A small chevron drawn with two gradients — no image file needed. */
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 52%, calc(100% - 11px) 52%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* ───────── Switch (a styled checkbox) ───────── */
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 550;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.switch__track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background var(--duration) var(--ease);
+}
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration) var(--ease);
+}
+.switch input:checked + .switch__track { background: var(--accent); }
+.switch input:checked + .switch__track::after { transform: translateX(14px); }
+.switch input:focus-visible + .switch__track { box-shadow: var(--focus-ring); }
+
+/* ───────── Panel: a framed area with a header (editor, preview, console) ───────── */
+
+.panel {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel__title {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.panel__actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+/* ───────── Tabs ───────── */
+
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  position: relative;
+  padding: var(--space-3) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 550;
+}
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { color: var(--text); }
+.tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* A red dot on a tab whose file has an error */
+.tab--error::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--mistake);
+  vertical-align: 1px;
+}

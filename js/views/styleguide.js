@@ -5,6 +5,7 @@
 
 import { h, icon } from '../core/dom.js';
 import { pageHeader, section, callout } from '../ui/page.js';
+import { createCodeBlock } from '../ui/code-block.js';
 
 const sampleCode = `const tasks = ['Read', 'Write', 'Debug'];
 
@@ -27,7 +28,8 @@ export function render(root) {
         callout('explain', 'Explanation',
           h('p', null, 'A plain description of a concept. Inline code looks like this: ', h('code', null, 'array.map()'), '.')),
         callout('example', 'Example',
-          h('pre', { class: 'code-block' }, h('code', null, sampleCode))),
+          createCodeBlock({ code: sampleCode, language: 'js', highlight: [3, 4], label: 'Example: counting letters' }),
+          h('p', null, 'Lines 3–4 are highlighted: the important part of the example.')),
         callout('exercise', 'Exercise',
           h('p', null, 'Write a function that returns the length of every word.')),
         callout('hint', 'Hint 1 of 3',
