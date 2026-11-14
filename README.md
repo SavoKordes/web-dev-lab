@@ -26,6 +26,7 @@ css/
   components.css      Buttons, cards, callouts, badges, forms, panels, tabs
   syntax.css          Colors for highlighted code
   editor.css          Code editor, code blocks, Code-mode layout, console
+  exercise.css        Exercise shell, exercise types, feedback, hint and solution areas
 js/
   theme-init.js       Classic script: applies the saved theme before first paint
   main.js             Entry point: route table, renders views on navigation
@@ -39,6 +40,8 @@ js/
     loop-guard.js     Inserts infinite-loop checks into your code before it runs
     sandbox.js        Runs code in an isolated iframe; relays console, errors, storage
     error-explainer.js  Plain-English explanations of common error messages
+    test-runner.js    expect()-style tests that run inside the sandbox
+    progress.js       Records attempts, hints and solutions; credit per skill
   ui/                 Shared UI behavior and building blocks
     theme.js          Light/dark/system theme
     shell.js          Mobile nav drawer, active link, page title
@@ -46,11 +49,16 @@ js/
     code-editor.js    Textarea + highlighted layer, line numbers, smart indentation
     code-block.js     Read-only highlighted code with line numbers and marked lines
     console-panel.js  Shows console output and explained errors
+    rich-text.js      `code`, **bold**, lists and ```code blocks``` in content text
+    exercise.js       The exercise shell: task, Check, hint ladder, solution lock, feedback
+    exercises/        One renderer per exercise type: code, predict, order, choice, explain
   views/              One file per page; each exports render(root, params)
 content/              Curriculum as plain data. No UI code
   curriculum.js       The eight modules
   modes.js            The four practice modes
   playground-starters.js  Example projects for Code mode
+  exercises.js        Registry of all exercises (look up any exercise by id)
+  sample-exercises.js One exercise of each type
 ```
 
 ### Data flow in one sentence
@@ -72,13 +80,30 @@ Error line numbers are translated back to lines in your JavaScript editor.
 `localStorage` inside the preview is a stand-in that the app saves for you, because the real one is blocked in a sandbox.
 Loops get an automatic guard that stops them after about 1.5 seconds, so `while (true) {}` cannot freeze the page.
 
+## How exercises work
+
+An exercise is a plain object in `content/` with a `type`, a `prompt`, `skills`, `hints`, an optional `solution` and type-specific fields.
+`js/ui/exercise.js` wraps it in the shared shell. A renderer from `js/ui/exercises/` provides the part that differs per type.
+
+| Type | You… | Checked by |
+|---|---|---|
+| `code` | write or fix HTML, CSS or JS | tests run in the sandbox (`expect(...).toBe(...)`) |
+| `predict` | type the console output before seeing it | line-by-line comparison |
+| `order` | put steps in execution order | position comparison |
+| `choice` | pick an answer | per-option feedback explaining each misconception |
+| `explain` | explain code in your own words | self-assessment against key points |
+
+Hints come in a fixed ladder: where to look → the concept → a nudge.
+The solution unlocks only after a real attempt and all hints, and viewing it gives no mastery credit.
+Every solve records a credit from 0 to 1 per skill, lowered by hints and failed checks. The mastery dashboard (Stage 10) is built on these credits.
+
 ## Build stages
 
 | Stage | Content | Status |
 |---|---|---|
 | 1 | App shell, navigation, router, theme, storage, settings | ✅ Done |
 | 2 | Code mode: editor, syntax highlighting, sandbox, console | ✅ Done |
-| 3 | Exercise engine: checkers, hint ladder, progress recording | |
+| 3 | Exercise engine: checkers, hint ladder, progress recording | ✅ Done |
 | 4 | Learn mode + Modules 1–2 (HTML, CSS) | |
 | 5 | Module 3 (JavaScript), in two parts | |
 | 6 | Understand mode + Module 4 | |

@@ -49,6 +49,12 @@ a {
 }
 a:hover { color: var(--accent-hover); }
 
+code, kbd, pre, textarea {
+  /* Some coding fonts draw "=>" as ⇒ and "!==" as ≠=. Learners must see the
+   * real characters they would type, so ligatures are switched off. */
+  font-variant-ligatures: none;
+}
+
 code, kbd, pre {
   font-family: var(--font-mono);
   font-size: 0.9em;
@@ -61,6 +67,7 @@ code, kbd, pre {
   background: var(--surface-2);
   border: 1px solid var(--border);
   font-size: 0.85em;
+  white-space: pre-wrap; /* keep repeated spaces visible: in code they can matter */
 }
 
 img, svg { display: block; max-width: 100%; }
