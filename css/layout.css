@@ -1,0 +1,240 @@
+/*
+ * layout.css — the application shell: sidebar, top bar and main content area.
+ *
+ * Desktop (≥ 900px): a two-column CSS Grid — fixed-width sidebar + flexible main column.
+ * Mobile  (< 900px): one column; the sidebar slides in from the left as a drawer.
+ */
+
+/* Icon sprite container: present in the DOM but takes no space. */
+.sprite { display: none; }
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;          /* icons take the text color of their parent */
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Skip link: first focusable element, visible only when focused ── */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+.skip-link:focus { top: var(--space-3); }
+
+/* ── App grid ── */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: sticky;            /* stays in view while the main column scrolls */
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--topbar-height);
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.brand-name {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__close { margin-left: auto; }
+
+/*
+ * These two buttons are only for the mobile drawer. The selectors are deliberately
+ * more specific (two classes) than `.icon-btn` in components.css, which sets
+ * `display: inline-flex` and is loaded later. With equal specificity, the rule that
+ * comes later would win and the buttons would show on desktop too.
+ */
+.sidebar .sidebar__close,
+.topbar .nav-toggle { display: none; }
+
+.sidebar__nav {
+  flex: 1;
+  padding: var(--space-4) var(--space-3);
+}
+
+.nav-group-label {
+  margin: var(--space-4) var(--space-3) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.nav-group-label:first-child { margin-top: 0; }
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
+}
+.nav-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+/* The router sets aria-current="page" on the active link — we style that attribute
+ * directly instead of adding an extra "active" class. */
+.nav-link[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.sidebar__footer {
+  padding: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-backdrop { display: none; }
+
+/* ── Main column ── */
+.main-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;                /* lets wide children (code) shrink instead of overflowing */
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--topbar-height);
+  padding: 0 var(--space-5);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.topbar__actions {
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Theme toggle: show a moon in light mode, a sun in dark mode. */
+.theme-icon--dark { display: none; }
+:root[data-theme="dark"] .theme-icon--light { display: none; }
+:root[data-theme="dark"] .theme-icon--dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon--light { display: none; }
+  :root:not([data-theme="light"]) .theme-icon--dark { display: block; }
+}
+
+.main {
+  flex: 1;
+  outline: none;
+}
+
+.main__noscript { padding: var(--space-6); }
+
+/* Pages are centered with a comfortable reading width. */
+.page {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+/* Some views (the Code editor) use the full width. */
+.page--wide { max-width: none; }
+
+/* ── Mobile: sidebar becomes a slide-in drawer ── */
+@media (max-width: 899px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 50;
+    width: min(85vw, 300px);
+    transform: translateX(-100%);
+    transition: transform 220ms var(--ease);
+    box-shadow: var(--shadow-md);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgb(0 0 0 / 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms var(--ease);
+  }
+
+  /* js/ui/shell.js adds .nav-open to .app to open the drawer */
+  .app.nav-open .sidebar { transform: translateX(0); }
+  .app.nav-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+
+  .sidebar .sidebar__close,
+  .topbar .nav-toggle { display: inline-flex; }
+
+  .topbar { padding: 0 var(--space-4); }
+  .page { padding: var(--space-5) var(--space-4) var(--space-7); }
+}
