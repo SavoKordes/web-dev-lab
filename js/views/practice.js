@@ -1,12 +1,14 @@
 /*
  * practice.js — shows one exercise on its own page: #/practice/<exercise id>
  *
- * Used for the sample exercises now, and later for revision exercises that
- * come back on the dashboard.
+ * Used for revision (an exercise coming back on its own, outside its lesson).
+ * The breadcrumb links back to the lesson the exercise belongs to.
  */
 
-import { h, icon } from '../core/dom.js';
-import { getExercise, sampleExercises } from '../../content/exercises.js';
+import { h } from '../core/dom.js';
+import { getExercise } from '../../content/exercises.js';
+import { findLessonOfExercise } from '../../content/lessons.js';
+import { getModule } from '../../content/curriculum.js';
 import { createExercise } from '../ui/exercise.js';
 import { emptyState } from '../ui/page.js';
 
@@ -28,26 +30,26 @@ export function render(root, params) {
 
   const view = createExercise(exercise);
 
-  // Previous / next within the list this exercise belongs to.
-  const list = sampleExercises;
-  const index = list.indexOf(exercise);
-  const previous = list[index - 1];
-  const next = list[index + 1];
+  // The lesson this exercise belongs to, for the breadcrumb and the "back" link.
+  const home = findLessonOfExercise(exercise.id);
+  const mod = home && getModule(home.moduleId);
+  const lessonUrl = home && `#/learn/${home.moduleId}/${home.lesson.slug}`;
 
   root.append(
     h('nav', { class: 'breadcrumbs', 'aria-label': 'Breadcrumb' },
       h('a', { href: '#/learn' }, 'Learn'),
-      h('span', { 'aria-hidden': 'true' }, '/'),
-      h('span', { 'aria-current': 'page' }, exercise.title),
+      home && [
+        h('span', { 'aria-hidden': 'true' }, '/'),
+        h('a', { href: `#/learn/${home.moduleId}` }, mod.title),
+        h('span', { 'aria-hidden': 'true' }, '/'),
+        h('a', { href: lessonUrl }, home.lesson.title),
+      ],
     ),
     // The page's h1 for screen readers; the exercise shows its own visible title.
     h('h1', { class: 'visually-hidden', tabindex: '-1' }, exercise.title),
     view.element,
-    index >= 0 && h('nav', { class: 'pager', 'aria-label': 'More exercises' },
-      previous
-        ? h('a', { class: 'btn btn--ghost', href: `#/practice/${previous.id}` }, '← ', previous.title)
-        : h('span'),
-      next && h('a', { class: 'btn', href: `#/practice/${next.id}` }, next.title, icon('arrow-right')),
+    home && h('nav', { class: 'pager', 'aria-label': 'Lesson' },
+      h('a', { class: 'btn btn--ghost', href: lessonUrl }, '← Back to the lesson: ', home.lesson.title),
     ),
   );
 

@@ -310,3 +310,11 @@
   padding-top: var(--space-5);
   border-top: 1px solid var(--border);
 }
+
+/* Navigation buttons can carry long lesson titles: let them wrap on small screens
+ * instead of widening the page (buttons default to white-space: nowrap). */
+.pager .btn {
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+}

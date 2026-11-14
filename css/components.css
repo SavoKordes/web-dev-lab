@@ -543,6 +543,8 @@ a.card:hover { color: inherit; border-color: var(--accent); }
 
 .tab {
   position: relative;
+  flex-shrink: 0;
+  white-space: nowrap; /* labels stay on one line; the tab bar scrolls instead */
   padding: var(--space-3) var(--space-3);
   border: 0;
   background: transparent;
@@ -561,6 +563,15 @@ a.card:hover { color: inherit; border-color: var(--accent); }
   height: 2px;
   border-radius: 2px;
   background: var(--accent);
+}
+
+/* A small lock marks read-only tabs (provided files in exercises) */
+.tab .icon {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-right: 5px;
+  vertical-align: -1px;
 }
 
 /* A red dot on a tab whose file has an error */

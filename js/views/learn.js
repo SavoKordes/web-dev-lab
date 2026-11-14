@@ -1,23 +1,13 @@
 /*
- * learn.js — Learn mode overview: where to continue, all modules, preview exercises.
+ * learn.js — Learn mode overview: where to continue, and all modules.
  */
 
 import { h, icon } from '../core/dom.js';
 import { modules } from '../../content/curriculum.js';
 import { getMode } from '../../content/modes.js';
-import { sampleExercises } from '../../content/exercises.js';
-import { getExerciseState } from '../services/progress.js';
 import { moduleProgress, nextLesson } from '../services/curriculum-progress.js';
-import { TYPE_LABELS } from '../ui/exercise.js';
 import { pageHeader, section } from '../ui/page.js';
 import { meter } from '../ui/meter.js';
-
-const STATUS_TEXT = {
-  new: 'Not started',
-  attempted: 'In progress',
-  solved: 'Solved',
-  revealed: 'Solution viewed',
-};
 
 export function render(root) {
   const mode = getMode('learn');
@@ -35,10 +25,6 @@ export function render(root) {
       )),
 
     section('Modules', h('ol', { class: 'module-list' }, modules.map(moduleRow))),
-
-    sampleExercises.length > 0 && section('Preview: JavaScript in the browser',
-      h('p', { class: 'muted' }, 'A first taste of the second part of Module 3. It moves into its lesson when that part is written.'),
-      h('ul', { class: 'exercise-list' }, sampleExercises.map(exerciseRow))),
   );
 }
 
@@ -60,14 +46,4 @@ function moduleRow(mod) {
   return h('li', null, progress.available
     ? h('a', { class: 'card module module--link', href: `#/learn/${mod.id}` }, content)
     : h('div', { class: 'card module module--unavailable' }, content));
-}
-
-function exerciseRow(exercise) {
-  const state = getExerciseState(exercise.id);
-  return h('li', null,
-    h('a', { class: 'card exercise-link', href: `#/practice/${exercise.id}` },
-      h('span', { class: 'exercise-link__type' }, TYPE_LABELS[exercise.type]),
-      h('span', { class: 'exercise-link__title' }, exercise.title),
-      h('span', { class: `badge${state.status === 'solved' ? ' badge--success' : ''}` }, STATUS_TEXT[state.status]),
-    ));
 }
