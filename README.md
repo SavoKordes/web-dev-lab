@@ -64,8 +64,9 @@ content/              Curriculum as plain data. No UI code
   lessons.js          Registry of lessons per module (and the lesson format)
   modules/html.js     Module 1: 7 lessons
   modules/css.js      Module 2: 9 lessons
+  modules/js-core.js  Module 3, part 1: 12 lessons on the JavaScript language
   exercises.js        Registry of all exercises (look up any exercise by id)
-  sample-exercises.js JavaScript preview exercises (move into Modules 3–4 later)
+  sample-exercises.js Preview exercise for Module 3, part 2 (moves into its lesson later)
 ```
 
 ### Data flow in one sentence
@@ -118,7 +119,7 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 2 | Code mode: editor, syntax highlighting, sandbox, console | ✅ Done |
 | 3 | Exercise engine: checkers, hint ladder, progress recording | ✅ Done |
 | 4 | Learn mode + Modules 1–2 (HTML, CSS) | ✅ Done |
-| 5 | Module 3 (JavaScript), in two parts | |
+| 5 | Module 3 (JavaScript), in two parts | Part 1 ✅ (language core) · Part 2 next (browser) |
 | 6 | Understand mode + Module 4 | |
 | 7 | Debug mode + Module 5 | |
 | 8 | Modules 6–7 | |

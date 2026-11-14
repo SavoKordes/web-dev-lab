@@ -72,7 +72,8 @@ export function inline(text) {
   for (const piece of text.split(/(`[^`]+`|\*\*[^*]+\*\*)/)) {
     if (!piece) continue;
     if (piece.startsWith('`')) result.push(h('code', null, piece.slice(1, -1)));
-    else if (piece.startsWith('**')) result.push(h('strong', null, piece.slice(2, -2)));
+    // Bold text may itself contain `code`, so its content is formatted too (recursion).
+    else if (piece.startsWith('**')) result.push(h('strong', null, inline(piece.slice(2, -2))));
     else result.push(piece);
   }
   return result;
