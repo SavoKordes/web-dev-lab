@@ -26,6 +26,8 @@ import { jsCoreLessons } from './modules/js-core.js';
 import { jsBrowserLessons } from './modules/js-browser.js';
 import { readingLessons } from './modules/reading.js';
 import { debuggingLessons } from './modules/debugging.js';
+import { interactiveLessons } from './modules/interactive.js';
+import { professionalLessons } from './modules/professional.js';
 
 const lessonsByModule = {
   html: htmlLessons,
@@ -33,6 +35,8 @@ const lessonsByModule = {
   js: [...jsCoreLessons, ...jsBrowserLessons],
   reading: readingLessons,
   debugging: debuggingLessons,
+  dom: interactiveLessons,
+  professional: professionalLessons,
 };
 
 export function getLessons(moduleId) {

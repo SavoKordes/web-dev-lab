@@ -68,6 +68,8 @@ content/              Curriculum as plain data. No UI code
   modules/js-browser.js  Module 3, part 2: 10 lessons on JavaScript in the browser
   modules/reading.js  Module 4: 7 lessons on reading and understanding code
   modules/debugging.js  Module 5: 8 lessons, 15 bug challenges
+  modules/interactive.js  Module 6: 7 lessons building interactive components
+  modules/professional.js  Module 7: 6 lessons on professional practices and code review
   shared/fake-services.js  Fake APIs (users, products) used as setup code in exercises
   exercises.js        Registry of all exercises (look up any exercise by id)
 ```
@@ -126,7 +128,7 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 5 | Module 3 (JavaScript), in two parts | ✅ Done |
 | 6 | Understand mode + Module 4 | ✅ Done |
 | 7 | Debug mode + Module 5 | ✅ Done |
-| 8 | Modules 6–7 | |
+| 8 | Modules 6–7 | ✅ Done |
 | 9 | Projects (Module 8) | |
 | 10 | Progress dashboard: mastery, revision queue, charts | |
 | 11 | Accessibility and mobile review, polish | |
