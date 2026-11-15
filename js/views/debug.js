@@ -1,18 +1,24 @@
 /*
- * debug.js — the Debug mode. Placeholder until its stage is built (see README "Build stages").
- * The text comes from content/modes.js so it stays consistent with the dashboard.
+ * debug.js — Debug mode: broken code to diagnose and repair.
+ *
+ *   #/debug            all bug challenges, filterable by bug category
+ *   #/debug/<id>       one challenge, with "next" navigation
+ *
+ * A challenge is any exercise marked `debug: true` (mostly in Module 5). Each
+ * has a symptom, progressive hints, and a post-mortem after you fix it.
  */
 
-import { getMode } from '../../content/modes.js';
-import { createPlaceholder } from './placeholder.js';
+import { createDrillCollectionView } from './drill-collection.js';
 
-const mode = getMode('debug');
-
-export const render = createPlaceholder({
-  eyebrow: 'Practice mode',
-  title: mode.title,
-  lead: mode.description,
-  iconName: mode.icon,
-  points: mode.points,
-  emptyText: 'This mode is being built. Its exercises will appear here as their curriculum modules are added.',
+export const render = createDrillCollectionView({
+  modeId: 'debug',
+  basePath: '/debug',
+  noun: 'challenge',
+  include: (exercise) => exercise.debug === true,
+  groupOf: (exercise) => exercise.bugCategory ?? 'Other',
+  intro: {
+    title: 'Find it, fix it, recognize it next time',
+    text: 'Each challenge is code with a real bug and a description of the symptom. Use the method from Module 5: reproduce, read the error, locate, form a hypothesis, change one thing, verify. Hints come one step at a time.',
+    links: [{ href: '#/learn/debugging', label: 'Module 5 lessons' }],
+  },
 });

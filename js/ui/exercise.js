@@ -88,7 +88,7 @@ export function createExercise(exercise) {
 
   const element = h('article', { class: 'exercise', 'aria-labelledby': `${exercise.id}-title` },
     h('header', { class: 'exercise__header' },
-      h('p', { class: 'eyebrow' }, `Exercise · ${TYPE_LABELS[exercise.type]}`),
+      h('p', { class: 'eyebrow' }, exercise.debug ? `Bug challenge · ${exercise.bugCategory ?? 'Fix the bug'}` : `Exercise · ${TYPE_LABELS[exercise.type]}`),
       h('div', { class: 'exercise__title-row' },
         h('h2', { class: 'exercise__title', id: `${exercise.id}-title` }, exercise.title),
         statusBadge),
@@ -220,11 +220,12 @@ export function createExercise(exercise) {
 
   function renderSuccess() {
     setChildren(successArea, [
+      // Debug challenges end with a post-mortem: why the bug happened, and how to spot it.
       exercise.explanation && !solutionArea.hasChildNodes() && h('div', { class: 'callout callout--explain' },
-        h('p', { class: 'callout__label' }, 'Why this works'),
+        h('p', { class: 'callout__label' }, exercise.debug ? 'Why the bug happened' : 'Why this works'),
         richText(exercise.explanation)),
       exercise.takeaway && h('div', { class: 'callout callout--example' },
-        h('p', { class: 'callout__label' }, 'Remember next time'),
+        h('p', { class: 'callout__label' }, exercise.debug ? 'How to recognize it next time' : 'Remember next time'),
         richText(exercise.takeaway)),
     ]);
   }

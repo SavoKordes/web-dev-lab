@@ -50,6 +50,7 @@ const routes = [
   { path: '/practice/:exerciseId', view: practice, title: 'Exercise', section: 'learn' },
   { path: '/code',       view: code,       title: 'Code',             section: 'code', wide: true },
   { path: '/debug',      view: debug,      title: 'Debug',            section: 'debug' },
+  { path: '/debug/:exerciseId', view: debug, title: 'Bug challenge', section: 'debug' },
   { path: '/understand', view: understand, title: 'Understand',       section: 'understand' },
   { path: '/understand/:exerciseId', view: understand, title: 'Drill', section: 'understand' },
   { path: '/projects',   view: projects,   title: 'Projects',         section: 'projects' },
