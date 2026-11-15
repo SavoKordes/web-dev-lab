@@ -44,6 +44,7 @@ js/
     test-runner.js    expect()-style tests that run inside the sandbox
     progress.js       Records attempts, hints and solutions; credit per skill
     curriculum-progress.js  Lesson and module progress, calculated from exercise states
+    mastery.js        Mastery per skill (credit × retention), levels, revision schedule, weak spots
   ui/                 Shared UI behavior and building blocks
     theme.js          Light/dark/system theme
     shell.js          Mobile nav drawer, active link, page title
@@ -56,6 +57,7 @@ js/
     exercises/        One renderer per exercise type: code, predict, order, choice, explain, trace
     lesson-example.js Code example with clickable "important lines", preview, "Try it in Code mode"
     meter.js          Accessible progress bar
+    chart.js          Accessible SVG line chart with hover tooltip and table view
   views/              One file per page; each exports render(root, params)
 content/              Curriculum as plain data. No UI code
   curriculum.js       The eight modules
@@ -119,6 +121,14 @@ A lesson is plain data in `content/modules/`, made of sections in a fixed teachi
 explanation → example (with "important lines" you can click to highlight) → common mistakes → exercises → key points.
 Lesson progress is never stored separately. It is calculated from the exercises, so it cannot drift out of sync.
 
+## Mastery and revision
+
+Completion (what you finished) and mastery (what you can still do) are separate.
+Every solved exercise gives its skills a credit from 0 to 1, lowered by hints and failed checks, and 0 after viewing the solution.
+A skill's mastery is the weighted average of its last five credits × a retention factor that falls with the days since you practised it. More successful practice makes it fall more slowly.
+After practice, a skill is due for revision after 1, 3, 7, 14, 30, then 60 days (after 1 day if the last result was weak).
+A revision uses a different exercise for the same skill where possible, and is recorded separately from the lesson attempt.
+
 ## Build stages
 
 | Stage | Content | Status |
@@ -132,5 +142,5 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 7 | Debug mode + Module 5 | ✅ Done |
 | 8 | Modules 6–7 | ✅ Done |
 | 9 | Projects (Module 8) | ✅ Done |
-| 10 | Progress dashboard: mastery, revision queue, charts | |
+| 10 | Progress dashboard: mastery, revision queue, charts | ✅ Done |
 | 11 | Accessibility and mobile review, polish | |

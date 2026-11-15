@@ -26,6 +26,7 @@ import * as curriculum from './views/curriculum.js';
 import * as progress from './views/progress.js';
 import * as learn from './views/learn.js';
 import * as practice from './views/practice.js';
+import * as review from './views/review.js';
 import * as moduleView from './views/module.js';
 import * as lesson from './views/lesson.js';
 import * as code from './views/code.js';
@@ -44,6 +45,7 @@ const routes = [
   { path: '/',           view: dashboard,  title: 'Dashboard',        section: 'dashboard' },
   { path: '/curriculum', view: curriculum, title: 'Curriculum',       section: 'curriculum' },
   { path: '/progress',   view: progress,   title: 'Progress',         section: 'progress' },
+  { path: '/review/:exerciseId', view: review, title: 'Revision', section: 'progress' },
   { path: '/learn',      view: learn,      title: 'Learn',            section: 'learn' },
   { path: '/learn/:moduleId', view: moduleView, title: 'Module', section: 'learn' },
   { path: '/learn/:moduleId/:lessonSlug', view: lesson, title: 'Lesson', section: 'learn' },

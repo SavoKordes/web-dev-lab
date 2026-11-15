@@ -10,6 +10,8 @@ import { h, icon } from '../core/dom.js';
 import { read } from '../core/store.js';
 import { modes } from '../../content/modes.js';
 import { countDoneLessons, nextLesson } from '../services/curriculum-progress.js';
+import { overallScore, levelFor, dueRevisions } from '../services/mastery.js';
+import { revisionList } from './progress.js';
 import { pageHeader, section, callout } from '../ui/page.js';
 
 export function render(root) {
@@ -23,6 +25,9 @@ export function render(root) {
     }),
 
     section('Where you are', statsRow(progress)),
+
+    progress.attempts.length > 0 && section('Revision due', revisionList(dueRevisions(), 3),
+      h('p', { style: 'margin-top: var(--space-3)' }, h('a', { href: '#/progress' }, 'See your full progress'))),
 
     section('Practice modes',
       h('div', { class: 'grid grid--4' }, modes.map(modeCard)),
@@ -44,13 +49,15 @@ function statsRow(progress) {
   const lessonsDone = countDoneLessons();
   const attempts = progress.attempts.length;
 
+  const score = overallScore();
   const stats = [
-    { value: 'Foundation', label: 'Current level' },
+    { value: levelFor(score).name, label: 'Current level' },
+    { value: `${score}%`, label: 'Overall mastery' },
     { value: lessonsDone, label: 'Lessons completed' },
-    { value: attempts, label: 'Exercises attempted' },
+    { value: attempts, label: 'Checks made' },
   ];
 
-  return h('div', { class: 'grid' },
+  return h('div', { class: 'grid grid--4' },
     stats.map(({ value, label }) =>
       h('div', { class: 'card stat' },
         h('div', { class: 'stat__value' }, value),
