@@ -28,6 +28,7 @@ import { readingLessons } from './modules/reading.js';
 import { debuggingLessons } from './modules/debugging.js';
 import { interactiveLessons } from './modules/interactive.js';
 import { professionalLessons } from './modules/professional.js';
+import { projectLessons } from './modules/projects.js';
 
 const lessonsByModule = {
   html: htmlLessons,
@@ -37,6 +38,7 @@ const lessonsByModule = {
   debugging: debuggingLessons,
   dom: interactiveLessons,
   professional: professionalLessons,
+  projects: projectLessons,
 };
 
 export function getLessons(moduleId) {

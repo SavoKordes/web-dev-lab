@@ -54,6 +54,7 @@ const routes = [
   { path: '/understand', view: understand, title: 'Understand',       section: 'understand' },
   { path: '/understand/:exerciseId', view: understand, title: 'Drill', section: 'understand' },
   { path: '/projects',   view: projects,   title: 'Projects',         section: 'projects' },
+  { path: '/projects/:lessonSlug', view: projects, title: 'Project', section: 'projects' },
   { path: '/settings',   view: settings,   title: 'Settings',         section: 'settings' },
   { path: '/styleguide', view: styleguide, title: 'Design reference', section: 'settings' },
 ];

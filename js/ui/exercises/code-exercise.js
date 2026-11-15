@@ -13,6 +13,8 @@
  *     tests: [{ name, run }],         // see js/services/test-runner.js
  *     pitfalls: [{ file, pattern, absent?, message }],  // common-mistake detectors
  *     solution: { js: '…' },
+ *     downloadable: true,             // offer "Download as HTML file" (projects)
+ *     setupInDownload: false,         // leave the setup code out of the download
  *   }
  *
  * ─── The renderer contract (shared by every exercise type) ───
@@ -85,6 +87,10 @@ export function createCodeExercise(exercise, ctx) {
         if (message.line && editors.js) editors.js.markLine(message.line);
       }
       if (message.type === 'tests' && pendingCheck) pendingCheck(message);
+      if (message.type === 'navigated') {
+        if (pendingCheck) pendingCheck({ navigated: true });
+        else consolePanel.note('The preview page reloaded. Did a form submit without event.preventDefault()?');
+      }
     },
   });
 
@@ -163,6 +169,30 @@ export function createCodeExercise(exercise, ctx) {
     runCode();
   }
 
+  /** Combine the files into one standalone HTML document and download it. */
+  function download() {
+    const setup = exercise.setupInDownload === false ? '' : (given.setup ?? '');
+    const page = [
+      '<!doctype html>',
+      '<html lang="en">',
+      '<head>',
+      '<meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      `<title>${exercise.title}</title>`,
+      `<style>\n${current.css}\n</style>`,
+      '</head>',
+      '<body>',
+      current.html,
+      `<script>\n${setup}\n${current.js}\n</script>`,
+      '</body>',
+      '</html>',
+    ].join('\n');
+    const url = URL.createObjectURL(new Blob([page], { type: 'text/html' }));
+    const fileName = `${exercise.id.replace(/[^\w-]+/g, '-')}.html`;
+    h('a', { href: url, download: fileName }).click();
+    URL.revokeObjectURL(url);
+  }
+
   /* ───────── Layout ───────── */
 
   const element = h('div', { class: `code-exercise${showPreview ? '' : ' code-exercise--no-preview'}` },
@@ -171,6 +201,7 @@ export function createCodeExercise(exercise, ctx) {
         h('div', { class: 'tabs', role: 'tablist', 'aria-label': 'Files', onKeydown: onTabKeydown },
           tabs.map((t) => t.button)),
         h('div', { class: 'panel__actions' },
+          exercise.downloadable && h('button', { class: 'btn btn--ghost btn--sm', type: 'button', onClick: download, title: 'Save your project as one HTML file you can open in any browser' }, icon('download'), 'Download'),
           h('button', { class: 'btn btn--ghost btn--sm', type: 'button', onClick: resetCode }, 'Reset code'),
           h('button', { class: 'btn btn--sm', type: 'button', onClick: () => runCode(), title: 'Run without checking (Ctrl+Enter)' },
             'Run'),
@@ -218,6 +249,13 @@ export function createCodeExercise(exercise, ctx) {
   }
 
   function buildResult(message) {
+    if (message?.navigated) {
+      return {
+        correct: false,
+        score: 0,
+        feedback: h('p', null, 'The page reloaded while the checks were running, so they could not finish. This almost always means a form was submitted without ', h('code', null, 'event.preventDefault()'), ' in its submit handler.'),
+      };
+    }
     if (!message) {
       return {
         correct: false,

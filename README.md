@@ -70,7 +70,8 @@ content/              Curriculum as plain data. No UI code
   modules/debugging.js  Module 5: 8 lessons, 15 bug challenges
   modules/interactive.js  Module 6: 7 lessons building interactive components
   modules/professional.js  Module 7: 6 lessons on professional practices and code review
-  shared/fake-services.js  Fake APIs (users, products) used as setup code in exercises
+  modules/projects.js  Module 8: 5 projects, each with 3 milestones and a final review
+  shared/fake-services.js  Fake APIs (users, products, Open-Meteo) and order data used as setup code
   exercises.js        Registry of all exercises (look up any exercise by id)
 ```
 
@@ -106,6 +107,7 @@ An exercise is a plain object in `content/` with a `type`, a `prompt`, `skills`,
 | `choice` | pick an answer | per-option feedback explaining each misconception |
 | `explain` | explain code in your own words | self-assessment against key points |
 | `trace` | fill in a trace table: each variable's value after each step | cell-by-cell comparison |
+| `checklist` | review your finished project against professional criteria | honest self-review |
 
 Hints come in a fixed ladder: where to look → the concept → a nudge.
 The solution unlocks only after a real attempt and all hints, and viewing it gives no mastery credit.
@@ -129,6 +131,6 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 6 | Understand mode + Module 4 | ✅ Done |
 | 7 | Debug mode + Module 5 | ✅ Done |
 | 8 | Modules 6–7 | ✅ Done |
-| 9 | Projects (Module 8) | |
+| 9 | Projects (Module 8) | ✅ Done |
 | 10 | Progress dashboard: mastery, revision queue, charts | |
 | 11 | Accessibility and mobile review, polish | |
