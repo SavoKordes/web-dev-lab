@@ -1,7 +1,31 @@
 # Web Dev Lab
 
 An interactive training program for reading, writing and debugging HTML, CSS and JavaScript.
+It aims to take you from directing AI to build websites to understanding, writing and reviewing the code yourself.
 It is built with plain HTML, CSS and JavaScript (ES modules). There are no frameworks, no dependencies and no backend.
+
+## What's inside
+
+| Module | Lessons | Focus |
+|---|---|---|
+| 1. HTML fundamentals | 7 | structure, semantics, links, images, forms, tables, accessibility |
+| 2. CSS fundamentals | 9 | selectors, specificity, box model, positioning, flexbox, grid, responsive design, variables, pseudo-classes |
+| 3. JavaScript fundamentals | 22 | the language core (variables to closures), then the browser (DOM, events, forms, errors, JSON, storage, modules, promises, async/await, fetch) |
+| 4. Reading and understanding code | 7 | a reading method, execution order, call chains, data flow, trace tables, what-if changes, a complete module |
+| 5. Debugging workshop | 8 | a systematic method and 15 bug challenges across all common bug categories |
+| 6. DOM and interactive applications | 7 | tabs, dialogs, a calculator, a to-do list in two parts, search and filtering, form validation |
+| 7. Professional JavaScript | 6 | separation of concerns, clean code, state, error handling, API clients, architecture and reviewing AI code |
+| 8. Mini projects | 5 | dashboard, task manager, contact manager, weather app (Open-Meteo), business admin dashboard |
+
+**Four practice modes:**
+- **Learn:** lessons in a fixed order: explanation, example with important lines, common mistakes, exercises.
+- **Code:** HTML/CSS/JS editors with a live preview and a console that explains errors.
+- **Debug:** every bug challenge, filterable by bug category.
+- **Understand:** every code-reading drill, filterable by type.
+
+**Progress** shows your level, mastery per skill and module over time, revisions that are due, weak spots with reasons, and your full history.
+
+Every exercise gives hints in steps (where to look → the concept → a nudge). The solution unlocks only after a real attempt and all hints.
 
 ## Running it
 
@@ -129,6 +153,15 @@ A skill's mastery is the weighted average of its last five credits × a retentio
 After practice, a skill is due for revision after 1, 3, 7, 14, 30, then 60 days (after 1 day if the last result was weak).
 A revision uses a different exercise for the same skill where possible, and is recorded separately from the lesson attempt.
 
+## Quality checks
+
+During development, every stage was verified in a real (headless) browser:
+- **Content audit:** for every code exercise, the starter code fails at least one check and the model solution passes all of them. Every other exercise accepts its correct answer.
+- **Predict answers verified by running the code:** every JavaScript "predict the output" answer was compared with the real output.
+- **Alternative solutions and typical mistakes:** extra cases confirm that other correct solutions pass and common mistakes fail, with a useful message.
+- **Accessibility:** axe-core reports no violations (WCAG 2.1 AA plus best practices) on the main pages in both themes. Keyboard navigation was walked through, including the skip link, the editor's Esc+Tab, and the mobile menu.
+- **Responsive:** no horizontal scrolling at 360px on any page.
+
 ## Build stages
 
 | Stage | Content | Status |
@@ -143,4 +176,4 @@ A revision uses a different exercise for the same skill where possible, and is r
 | 8 | Modules 6–7 | ✅ Done |
 | 9 | Projects (Module 8) | ✅ Done |
 | 10 | Progress dashboard: mastery, revision queue, charts | ✅ Done |
-| 11 | Accessibility and mobile review, polish | |
+| 11 | Accessibility and mobile review, polish | ✅ Done |

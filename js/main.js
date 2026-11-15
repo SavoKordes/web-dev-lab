@@ -63,6 +63,7 @@ const routes = [
 
 const main = qs('#main');
 let cleanupCurrentView = null;
+let isFirstRender = true;
 
 /** Called by the router whenever the URL changes. */
 function showRoute({ route, params, path }) {
@@ -91,11 +92,16 @@ function showRoute({ route, params, path }) {
     page.innerHTML = '<div class="callout callout--mistake"><p class="callout__label">Something went wrong</p><p>This page failed to load. The browser console has the details.</p></div>';
   }
 
-  // 4. Accessibility: start at the top and move focus to the new page's heading,
-  //    so screen-reader and keyboard users know the page changed.
+  // 4. Accessibility: after navigating, start at the top and move focus to the new
+  //    page's heading, so screen-reader and keyboard users know the page changed.
+  //    Not on the very first load: then focus starts at the top of the document as
+  //    usual, so the first Tab reaches the "Skip to content" link.
   window.scrollTo(0, 0);
-  const heading = page.querySelector('h1');
-  (heading ?? main).focus({ preventScroll: true });
+  if (!isFirstRender) {
+    const heading = page.querySelector('h1');
+    (heading ?? main).focus({ preventScroll: true });
+  }
+  isFirstRender = false;
 }
 
 /* ───────── Start the app ───────── */

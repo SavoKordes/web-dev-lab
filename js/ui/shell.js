@@ -58,6 +58,16 @@ export function initShell() {
     if (event.key === 'Escape' && isOpen()) closeNav({ returnFocus: true });
   });
 
+  // The skip link's href="#main" would change the URL hash, which this app's
+  // router reads as a page address ("main": not found). So handle it here:
+  // move focus to the main content without touching the URL.
+  qs('.skip-link').addEventListener('click', (event) => {
+    event.preventDefault();
+    const main = qs('#main');
+    const target = main.querySelector('h1') ?? main;
+    target.focus();
+  });
+
   // Resizing from mobile to desktop width: reset the drawer state.
   mobileQuery.addEventListener('change', () => {
     closeNav();

@@ -1,9 +1,9 @@
 /*
  * dashboard.js — the home page.
  *
- * Shows summary numbers from your progress, the next lesson to continue with,
- * and the four practice modes. The full progress dashboard with charts is built
- * in a later stage.
+ * Shows your level and key numbers, the reviews that are due, the next lesson to
+ * continue with, and the four practice modes. The full picture (charts, weak
+ * spots, history) is on the Progress page (views/progress.js).
  */
 
 import { h, icon } from '../core/dom.js';
@@ -38,7 +38,7 @@ export function render(root) {
     section('How progress is measured',
       callout('explain', 'Completion is not mastery',
         h('p', null, 'Finishing an exercise once does not mean you have learned it. Each exercise trains specific skills. Your mastery of a skill rises when you solve problems without hints, and falls slowly when you have not practised it for a while.'),
-        h('p', null, 'Skills come back as revision exercises at growing intervals — after 1, 3, 7, 14 and 30 days — with different problems each time, so you cannot simply remember the answer.'),
+        h('p', null, 'Skills come back as revision exercises at growing intervals (after 1, 3, 7, 14, 30 and then 60 days, or after 1 day when the last result was weak), with a different exercise where possible, so you cannot simply remember the answer.'),
       ),
     ),
   );

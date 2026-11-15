@@ -56,7 +56,7 @@
   --border-strong: #c9ced8;
   --text: #1b1f27;
   --text-muted: #5b6372;
-  --text-faint: #8a92a1;
+  --text-faint: #646b79;  /* ≥ 4.5:1 on every light surface (WCAG AA) */
 
   --accent: #3550c8;         /* primary actions, links, focus */
   --accent-hover: #2a42ad;
@@ -67,7 +67,7 @@
   --explain: #3550c8;   --explain-soft: #eef1fc;
   --example: #5b6372;   --example-soft: #f2f4f7;
   --exercise: #7a3fc4;  --exercise-soft: #f4effc;
-  --hint: #a5660b;      --hint-soft: #fdf5e6;
+  --hint: #95590a;      --hint-soft: #fdf5e6;  /* 5.2:1 for the label text */
   --solution: #18794e;  --solution-soft: #eaf6f0;
   --mistake: #c0392b;   --mistake-soft: #fcefed;
 
@@ -107,7 +107,7 @@
     --border-strong: #353d4c;
     --text: #e6e9ef;
     --text-muted: #a0a8b8;
-    --text-faint: #6f7889;
+    --text-faint: #8a93a5;
     --accent: #7d93f2;
     --accent-hover: #98aaf6;
     --accent-soft: #1f2744;
@@ -147,7 +147,7 @@
   --border-strong: #353d4c;
   --text: #e6e9ef;
   --text-muted: #a0a8b8;
-  --text-faint: #6f7889;
+  --text-faint: #8a93a5;
   --accent: #7d93f2;
   --accent-hover: #98aaf6;
   --accent-soft: #1f2744;

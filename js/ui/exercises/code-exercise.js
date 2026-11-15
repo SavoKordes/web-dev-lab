@@ -70,6 +70,7 @@ export function createCodeExercise(exercise, ctx) {
   let pendingCheck = null; // the resolve() function of a check that is waiting for test results
 
   const consolePanel = createConsolePanel({
+    label: `Console: ${exercise.title}`,
     onLineClick: (line) => {
       if (!editors.js) return;
       selectTab('js');
@@ -196,7 +197,7 @@ export function createCodeExercise(exercise, ctx) {
   /* ───────── Layout ───────── */
 
   const element = h('div', { class: `code-exercise${showPreview ? '' : ' code-exercise--no-preview'}` },
-    h('section', { class: 'panel code-exercise__editors', 'aria-label': 'Your code' },
+    h('section', { class: 'panel code-exercise__editors', 'aria-label': `Your code: ${exercise.title}` },
       h('div', { class: 'code-exercise__bar' },
         h('div', { class: 'tabs', role: 'tablist', 'aria-label': 'Files', onKeydown: onTabKeydown },
           tabs.map((t) => t.button)),
@@ -210,7 +211,7 @@ export function createCodeExercise(exercise, ctx) {
       tabs.map((t) => t.panel),
     ),
     h('div', { class: 'code-exercise__output' },
-      showPreview && h('section', { class: 'panel preview', 'aria-label': 'Preview' },
+      showPreview && h('section', { class: 'panel preview', 'aria-label': `Preview: ${exercise.title}` },
         h('header', { class: 'panel__header' }, h('h3', { class: 'panel__title' }, 'Preview')),
         h('div', { class: 'preview__frame' }, sandbox.element)),
       consolePanel.element,

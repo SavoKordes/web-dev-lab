@@ -2,8 +2,8 @@
  * curriculum.js — the outline of the whole program, as plain data.
  *
  * Views read this data and turn it into pages; this file contains no UI code.
- * Lessons and exercises for each module are added in their own files
- * (content/m1-html.js, …) in later stages and linked by the module `id`.
+ * The lessons and exercises of each module live in content/modules/*.js and are
+ * linked to these modules by their `id` in content/lessons.js.
  */
 
 export const modules = [
