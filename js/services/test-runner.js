@@ -49,6 +49,8 @@ export function sandboxTestRunner(config, tests) {
   /* ── Readable descriptions of values for failure messages ── */
   function show(value) {
     if (typeof value === 'string') return JSON.stringify(value);
+    // JSON.stringify turns NaN and Infinity into "null", which would be misleading.
+    if (typeof value === 'number' && !Number.isFinite(value)) return String(value);
     if (typeof value === 'function') return `a function`;
     if (value instanceof Element) return `<${value.tagName.toLowerCase()}> element`;
     if (value === undefined) return 'undefined';

@@ -1,7 +1,31 @@
 # Web Dev Lab
 
 An interactive training program for reading, writing and debugging HTML, CSS and JavaScript.
+It aims to take you from directing AI to build websites to understanding, writing and reviewing the code yourself.
 It is built with plain HTML, CSS and JavaScript (ES modules). There are no frameworks, no dependencies and no backend.
+
+## What's inside
+
+| Module | Lessons | Focus |
+|---|---|---|
+| 1. HTML fundamentals | 7 | structure, semantics, links, images, forms, tables, accessibility |
+| 2. CSS fundamentals | 9 | selectors, specificity, box model, positioning, flexbox, grid, responsive design, variables, pseudo-classes |
+| 3. JavaScript fundamentals | 22 | the language core (variables to closures), then the browser (DOM, events, forms, errors, JSON, storage, modules, promises, async/await, fetch) |
+| 4. Reading and understanding code | 7 | a reading method, execution order, call chains, data flow, trace tables, what-if changes, a complete module |
+| 5. Debugging workshop | 8 | a systematic method and 15 bug challenges across all common bug categories |
+| 6. DOM and interactive applications | 7 | tabs, dialogs, a calculator, a to-do list in two parts, search and filtering, form validation |
+| 7. Professional JavaScript | 6 | separation of concerns, clean code, state, error handling, API clients, architecture and reviewing AI code |
+| 8. Mini projects | 5 | dashboard, task manager, contact manager, weather app (Open-Meteo), business admin dashboard |
+
+**Four practice modes:**
+- **Learn:** lessons in a fixed order: explanation, example with important lines, common mistakes, exercises.
+- **Code:** HTML/CSS/JS editors with a live preview and a console that explains errors.
+- **Debug:** every bug challenge, filterable by bug category.
+- **Understand:** every code-reading drill, filterable by type.
+
+**Progress** shows your level, mastery per skill and module over time, revisions that are due, weak spots with reasons, and your full history.
+
+Every exercise gives hints in steps (where to look → the concept → a nudge). The solution unlocks only after a real attempt and all hints.
 
 ## Running it
 
@@ -44,6 +68,7 @@ js/
     test-runner.js    expect()-style tests that run inside the sandbox
     progress.js       Records attempts, hints and solutions; credit per skill
     curriculum-progress.js  Lesson and module progress, calculated from exercise states
+    mastery.js        Mastery per skill (credit × retention), levels, revision schedule, weak spots
   ui/                 Shared UI behavior and building blocks
     theme.js          Light/dark/system theme
     shell.js          Mobile nav drawer, active link, page title
@@ -56,6 +81,7 @@ js/
     exercises/        One renderer per exercise type: code, predict, order, choice, explain, trace
     lesson-example.js Code example with clickable "important lines", preview, "Try it in Code mode"
     meter.js          Accessible progress bar
+    chart.js          Accessible SVG line chart with hover tooltip and table view
   views/              One file per page; each exports render(root, params)
 content/              Curriculum as plain data. No UI code
   curriculum.js       The eight modules
@@ -67,6 +93,11 @@ content/              Curriculum as plain data. No UI code
   modules/js-core.js  Module 3, part 1: 12 lessons on the JavaScript language
   modules/js-browser.js  Module 3, part 2: 10 lessons on JavaScript in the browser
   modules/reading.js  Module 4: 7 lessons on reading and understanding code
+  modules/debugging.js  Module 5: 8 lessons, 15 bug challenges
+  modules/interactive.js  Module 6: 7 lessons building interactive components
+  modules/professional.js  Module 7: 6 lessons on professional practices and code review
+  modules/projects.js  Module 8: 5 projects, each with 3 milestones and a final review
+  shared/fake-services.js  Fake APIs (users, products, Open-Meteo) and order data used as setup code
   exercises.js        Registry of all exercises (look up any exercise by id)
 ```
 
@@ -102,6 +133,7 @@ An exercise is a plain object in `content/` with a `type`, a `prompt`, `skills`,
 | `choice` | pick an answer | per-option feedback explaining each misconception |
 | `explain` | explain code in your own words | self-assessment against key points |
 | `trace` | fill in a trace table: each variable's value after each step | cell-by-cell comparison |
+| `checklist` | review your finished project against professional criteria | honest self-review |
 
 Hints come in a fixed ladder: where to look → the concept → a nudge.
 The solution unlocks only after a real attempt and all hints, and viewing it gives no mastery credit.
@@ -113,6 +145,23 @@ A lesson is plain data in `content/modules/`, made of sections in a fixed teachi
 explanation → example (with "important lines" you can click to highlight) → common mistakes → exercises → key points.
 Lesson progress is never stored separately. It is calculated from the exercises, so it cannot drift out of sync.
 
+## Mastery and revision
+
+Completion (what you finished) and mastery (what you can still do) are separate.
+Every solved exercise gives its skills a credit from 0 to 1, lowered by hints and failed checks, and 0 after viewing the solution.
+A skill's mastery is the weighted average of its last five credits × a retention factor that falls with the days since you practised it. More successful practice makes it fall more slowly.
+After practice, a skill is due for revision after 1, 3, 7, 14, 30, then 60 days (after 1 day if the last result was weak).
+A revision uses a different exercise for the same skill where possible, and is recorded separately from the lesson attempt.
+
+## Quality checks
+
+During development, every stage was verified in a real (headless) browser:
+- **Content audit:** for every code exercise, the starter code fails at least one check and the model solution passes all of them. Every other exercise accepts its correct answer.
+- **Predict answers verified by running the code:** every JavaScript "predict the output" answer was compared with the real output.
+- **Alternative solutions and typical mistakes:** extra cases confirm that other correct solutions pass and common mistakes fail, with a useful message.
+- **Accessibility:** axe-core reports no violations (WCAG 2.1 AA plus best practices) on the main pages in both themes. Keyboard navigation was walked through, including the skip link, the editor's Esc+Tab, and the mobile menu.
+- **Responsive:** no horizontal scrolling at 360px on any page.
+
 ## Build stages
 
 | Stage | Content | Status |
@@ -123,8 +172,8 @@ Lesson progress is never stored separately. It is calculated from the exercises,
 | 4 | Learn mode + Modules 1–2 (HTML, CSS) | ✅ Done |
 | 5 | Module 3 (JavaScript), in two parts | ✅ Done |
 | 6 | Understand mode + Module 4 | ✅ Done |
-| 7 | Debug mode + Module 5 | |
-| 8 | Modules 6–7 | |
-| 9 | Projects (Module 8) | |
-| 10 | Progress dashboard: mastery, revision queue, charts | |
-| 11 | Accessibility and mobile review, polish | |
+| 7 | Debug mode + Module 5 | ✅ Done |
+| 8 | Modules 6–7 | ✅ Done |
+| 9 | Projects (Module 8) | ✅ Done |
+| 10 | Progress dashboard: mastery, revision queue, charts | ✅ Done |
+| 11 | Accessibility and mobile review, polish | ✅ Done |

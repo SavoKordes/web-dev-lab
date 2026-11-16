@@ -394,3 +394,9 @@
 
 .exercise-link__body { display: grid; min-width: 0; }
 .exercise-link__source { font-size: var(--text-xs); color: var(--text-faint); }
+
+.exercise__continue-note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

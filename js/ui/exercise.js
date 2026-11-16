@@ -25,6 +25,7 @@ import { createOrderExercise } from './exercises/order-exercise.js';
 import { createChoiceExercise } from './exercises/choice-exercise.js';
 import { createExplainExercise } from './exercises/explain-exercise.js';
 import { createTraceExercise } from './exercises/trace-exercise.js';
+import { createChecklistExercise } from './exercises/checklist-exercise.js';
 
 const RENDERERS = {
   code: createCodeExercise,
@@ -33,6 +34,7 @@ const RENDERERS = {
   choice: createChoiceExercise,
   explain: createExplainExercise,
   trace: createTraceExercise,
+  checklist: createChecklistExercise,
 };
 
 export const TYPE_LABELS = {
@@ -42,6 +44,7 @@ export const TYPE_LABELS = {
   choice: 'Concept check',
   explain: 'Explain it',
   trace: 'Trace the values',
+  checklist: 'Final review',
 };
 
 const HINT_LABELS = ['Where to look', 'The concept', 'A nudge'];
@@ -54,15 +57,31 @@ const STATUS_BADGES = {
 };
 
 /**
- * @param {object} exercise - An exercise definition from content/.
+ * The starter code to continue from, or null: the previous milestone's saved code,
+ * if that milestone was solved and this one has not been started yet.
+ */
+function continuedStarter(exercise, state) {
+  if (!exercise.continuesFrom || state.draft) return null;
+  const previous = getExerciseState(exercise.continuesFrom);
+  if (previous.status !== 'solved' || !previous.draft) return null;
+  return { ...exercise.starter, ...previous.draft };
+}
+
+/**
+ * @param {object} definition - An exercise definition from content/.
  * @returns {{ element: HTMLElement, destroy: () => void }}
  */
-export function createExercise(exercise) {
-  const createRenderer = RENDERERS[exercise.type];
-  if (!createRenderer) throw new Error(`Unknown exercise type: "${exercise.type}"`);
+export function createExercise(definition) {
+  const createRenderer = RENDERERS[definition.type];
+  if (!createRenderer) throw new Error(`Unknown exercise type: "${definition.type}"`);
 
-  markOpened(exercise.id);
-  let state = getExerciseState(exercise.id);
+  markOpened(definition.id);
+  let state = getExerciseState(definition.id);
+
+  // Project milestones can continue from the learner's own solution of the
+  // previous milestone (`continuesFrom`), instead of the provided starter code.
+  const continued = continuedStarter(definition, state);
+  const exercise = continued ? { ...definition, starter: continued } : definition;
   const hints = (exercise.hints ?? []).map((hint, i) =>
     (typeof hint === 'string' ? { label: HINT_LABELS[i] ?? `Hint ${i + 1}`, text: hint } : hint));
 
@@ -86,9 +105,12 @@ export function createExercise(exercise) {
   const solutionButton = h('button', { class: 'btn btn--ghost', type: 'button', onClick: onShowSolution });
   const lockNote = h('p', { class: 'exercise__lock-note', id: `${exercise.id}-lock` });
 
+  const continueNote = continued && h('p', { class: 'exercise__continue-note' },
+    'This milestone starts from your own solution of the previous one.');
+
   const element = h('article', { class: 'exercise', 'aria-labelledby': `${exercise.id}-title` },
     h('header', { class: 'exercise__header' },
-      h('p', { class: 'eyebrow' }, `Exercise · ${TYPE_LABELS[exercise.type]}`),
+      h('p', { class: 'eyebrow' }, exercise.debug ? `Bug challenge · ${exercise.bugCategory ?? 'Fix the bug'}` : `Exercise · ${TYPE_LABELS[exercise.type]}`),
       h('div', { class: 'exercise__title-row' },
         h('h2', { class: 'exercise__title', id: `${exercise.id}-title` }, exercise.title),
         statusBadge),
@@ -96,6 +118,7 @@ export function createExercise(exercise) {
     h('div', { class: 'callout callout--exercise' },
       h('p', { class: 'callout__label' }, 'Your task'),
       richText(exercise.prompt)),
+    continueNote,
     renderer.element,
     h('div', { class: 'exercise__actions' },
       checkButton,
@@ -220,11 +243,12 @@ export function createExercise(exercise) {
 
   function renderSuccess() {
     setChildren(successArea, [
+      // Debug challenges end with a post-mortem: why the bug happened, and how to spot it.
       exercise.explanation && !solutionArea.hasChildNodes() && h('div', { class: 'callout callout--explain' },
-        h('p', { class: 'callout__label' }, 'Why this works'),
+        h('p', { class: 'callout__label' }, exercise.debug ? 'Why the bug happened' : 'Why this works'),
         richText(exercise.explanation)),
       exercise.takeaway && h('div', { class: 'callout callout--example' },
-        h('p', { class: 'callout__label' }, 'Remember next time'),
+        h('p', { class: 'callout__label' }, exercise.debug ? 'How to recognize it next time' : 'Remember next time'),
         richText(exercise.takeaway)),
     ]);
   }

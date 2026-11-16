@@ -25,7 +25,7 @@ function moduleItem(mod) {
     h('span', { class: 'module__number', 'aria-hidden': 'true' }, mod.number),
     h('div', null,
       h('div', { class: 'module__head' },
-        h('h3', null,
+        h('h2', null,
           h('span', { class: 'visually-hidden' }, `Module ${mod.number}: `),
           mod.title,
         ),

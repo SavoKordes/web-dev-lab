@@ -25,12 +25,20 @@ import { cssLessons } from './modules/css.js';
 import { jsCoreLessons } from './modules/js-core.js';
 import { jsBrowserLessons } from './modules/js-browser.js';
 import { readingLessons } from './modules/reading.js';
+import { debuggingLessons } from './modules/debugging.js';
+import { interactiveLessons } from './modules/interactive.js';
+import { professionalLessons } from './modules/professional.js';
+import { projectLessons } from './modules/projects.js';
 
 const lessonsByModule = {
   html: htmlLessons,
   css: cssLessons,
   js: [...jsCoreLessons, ...jsBrowserLessons],
   reading: readingLessons,
+  debugging: debuggingLessons,
+  dom: interactiveLessons,
+  professional: professionalLessons,
+  projects: projectLessons,
 };
 
 export function getLessons(moduleId) {

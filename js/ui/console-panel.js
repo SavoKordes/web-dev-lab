@@ -15,12 +15,14 @@ const LEVEL_LABELS = { log: 'log', info: 'info', debug: 'debug', warn: 'warning'
  * @param {(line: number) => void} [options.onLineClick] - Called when an error's line link is clicked.
  * @param {Node[]} [options.actions] - Extra buttons for the panel header.
  */
-export function createConsolePanel({ onLineClick, actions = [] } = {}) {
-  const list = h('ol', { class: 'console__list', role: 'log', 'aria-label': 'Console output' });
+export function createConsolePanel({ onLineClick, actions = [], label = 'Console' } = {}) {
+  // role="log" lets screen readers announce new output. It is not allowed on a
+  // list element, so the log is a <div> with one <div> per entry.
+  const list = h('div', { class: 'console__list', role: 'log', 'aria-label': `${label} output` });
   const status = h('span', { class: 'console__status' });
   const errorBadge = h('span', { class: 'badge badge--error', hidden: true });
 
-  const element = h('section', { class: 'panel console', 'aria-label': 'Console' },
+  const element = h('section', { class: 'panel console', 'aria-label': label },
     h('header', { class: 'panel__header' },
       h('h2', { class: 'panel__title' }, 'Console'),
       errorBadge,
@@ -37,7 +39,7 @@ export function createConsolePanel({ onLineClick, actions = [] } = {}) {
   let lastEntry = null; // for grouping identical repeated messages
 
   function showEmptyMessage() {
-    list.replaceChildren(h('li', { class: 'console__empty' },
+    list.replaceChildren(h('div', { class: 'console__empty' },
       'Nothing logged yet. Use console.log(value) in your JavaScript to print values here.'));
   }
 
@@ -60,7 +62,7 @@ export function createConsolePanel({ onLineClick, actions = [] } = {}) {
     }
 
     const counter = h('span', { class: 'console__count', hidden: true }, '1');
-    const entry = h('li', { class: `console__entry console__entry--${level}` },
+    const entry = h('div', { class: `console__entry console__entry--${level}` },
       h('div', { class: 'console__row' },
         counter,
         h('span', { class: 'console__level' }, LEVEL_LABELS[level] ?? level),
@@ -78,7 +80,7 @@ export function createConsolePanel({ onLineClick, actions = [] } = {}) {
     lastEntry = null;
     const explanation = explainError(message);
 
-    add(h('li', { class: 'console__entry console__entry--error console__entry--uncaught' },
+    add(h('div', { class: 'console__entry console__entry--error console__entry--uncaught' },
       h('div', { class: 'console__row' },
         h('span', { class: 'console__level' }, 'error'),
         h('span', { class: 'console__text' }, message),
@@ -101,7 +103,7 @@ export function createConsolePanel({ onLineClick, actions = [] } = {}) {
   /** A note from the lab itself (not from your code). */
   function note(text) {
     lastEntry = null;
-    add(h('li', { class: 'console__entry console__entry--note' }, text));
+    add(h('div', { class: 'console__entry console__entry--note' }, text));
   }
 
   function countError() {

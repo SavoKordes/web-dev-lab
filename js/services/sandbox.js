@@ -49,6 +49,15 @@ export function createSandbox({ title = 'Preview', onMessage }) {
   }
   window.addEventListener('message', handleMessage);
 
+  // Each run loads the page once. A SECOND load in the same run means the page
+  // navigated away, almost always a form submitted without preventDefault().
+  // (A page that is unloading cannot reliably send a message itself.)
+  let loadsThisRun = 0;
+  iframe.addEventListener('load', () => {
+    loadsThisRun += 1;
+    if (loadsThisRun > 1) onMessage({ type: 'navigated', runId: currentRun });
+  });
+
   return {
     element: iframe,
 
@@ -65,6 +74,7 @@ export function createSandbox({ title = 'Preview', onMessage }) {
      */
     run({ html = '', css = '', js = '', setup = '', storage = {}, tests = null }) {
       currentRun += 1;
+      loadsThisRun = 0;
       iframe.srcdoc = buildDocument({ html, css, js, setup, storage, tests, runId: currentRun });
     },
 

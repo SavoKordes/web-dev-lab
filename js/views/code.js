@@ -83,6 +83,9 @@ export function render(root) {
     onMessage(message) {
       if (message.type === 'console') consolePanel.log(message.level, message.parts);
       if (message.type === 'clear') consolePanel.clear();
+      if (message.type === 'navigated') {
+        consolePanel.note('The preview page reloaded. If a form was submitted, its submit handler probably needs event.preventDefault().');
+      }
       if (message.type === 'storage') {
         update('code', (code) => { code.sandboxStorage = message.data; });
       }
