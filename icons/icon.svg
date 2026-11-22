@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full-bleed background, so the icon also works as a "maskable" icon
+       (phones crop it to a circle or rounded square). The mark stays inside the
+       central safe zone. -->
+  <rect width="512" height="512" fill="#3550c8"/>
+  <g fill="none" stroke="#ffffff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M196 176 L116 256 L196 336"/>
+    <path d="M316 176 L396 256 L316 336"/>
+    <path d="M282 148 L230 364"/>
+  </g>
+</svg>

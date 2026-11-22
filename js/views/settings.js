@@ -6,6 +6,7 @@ import { h, icon, toast } from '../core/dom.js';
 import { on } from '../core/events.js';
 import { exportData, importData, resetAll } from '../core/store.js';
 import { getThemePreference, setThemePreference } from '../ui/theme.js';
+import { isOfflineSupported, isOfflineReady } from '../core/offline.js';
 import { pageHeader, section } from '../ui/page.js';
 
 export function render(root) {
@@ -20,6 +21,7 @@ export function render(root) {
     pageHeader({ eyebrow: 'Settings', title: 'Settings' }),
     section('Appearance', h('div', { class: 'card' }, themeRow())),
     section('Your data', h('div', { class: 'card' }, backupRow(), restoreRow(), resetRow())),
+    section('Offline use', h('div', { class: 'card' }, offlineRow())),
     section('Reference',
       h('div', { class: 'card' },
         h('div', { class: 'setting-row' },
@@ -123,6 +125,26 @@ function restoreRow() {
     ),
     fileInput,
     h('button', { class: 'btn', type: 'button', onClick: () => fileInput.click() }, icon('upload'), 'Choose file'),
+  );
+}
+
+/* ───────── Offline status ───────── */
+
+function offlineRow() {
+  let status;
+  if (!isOfflineSupported()) {
+    status = 'Not available here: offline use needs the app to be opened over https:// (for example GitHub Pages) or from http://localhost.';
+  } else if (isOfflineReady()) {
+    status = 'Ready. Every page you have opened works without an internet connection. Only the weather API in project 4 needs a connection.';
+  } else {
+    status = 'Being prepared. Reload the page once; after that, the app works without an internet connection.';
+  }
+  return h('div', { class: 'setting-row' },
+    h('div', { class: 'setting-row__text' },
+      h('h3', { class: 'card__title' }, 'Works offline'),
+      h('p', { class: 'card__text' }, status),
+      h('p', { class: 'card__text' }, 'To install it like an app on a phone or tablet, use "Add to Home Screen" (or "Install") in the browser menu.')),
+    h('span', { class: `badge${isOfflineReady() ? ' badge--success' : ''}` }, isOfflineReady() ? 'Ready' : 'Not yet'),
   );
 }
 

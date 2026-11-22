@@ -20,6 +20,7 @@ import { on } from './core/events.js';
 import { qs, toast } from './core/dom.js';
 import { initTheme } from './ui/theme.js';
 import { initShell, closeNav, setActiveSection, setPageTitle } from './ui/shell.js';
+import { registerOffline } from './core/offline.js';
 
 import * as dashboard from './views/dashboard.js';
 import * as curriculum from './views/curriculum.js';
@@ -118,3 +119,6 @@ on('store:error', () => {
 });
 
 createRouter(routes, showRoute).start();
+
+// Offline support (sw.js). Optional: without it, the app simply needs a connection.
+registerOffline();
