@@ -39,10 +39,27 @@ You can also use the **Live Server** extension in VS Code: right-click `index.ht
 
 Progress is saved in your browser's `localStorage`. Settings → "Download a backup" exports it as a file.
 
+## Offline use and installing on a tablet or phone
+
+The app works without an internet connection once it has been opened online one time.
+
+1. Publish it with GitHub Pages: on GitHub go to Settings → Pages, choose the `main` branch and the `/ (root)` folder. It will be at `https://<user>.github.io/web-dev-lab/`.
+2. Open that address on the tablet while online. Settings → "Works offline" shows **Ready** after the first load.
+3. Use "Add to Home Screen" (Safari: Share button; Chrome: ⋮ menu → "Install app"). It then opens full-screen, like an app.
+
+How it works: `sw.js` is a *service worker*, a script the browser runs between the page and the network. It always tries the network first (so you get updates), stores every file it fetches, and serves the stored copy when there is no connection. `js/core/offline.js` registers it and tells it which files the page has already loaded. Only the live weather API in project 4 needs a connection.
+
+Service workers need a secure address: `https://` or `http://localhost`. Opened over a local network address such as `http://192.168.1.20:8000` the app still works, but not offline.
+
+Progress is stored per browser. To move it to the tablet: Settings → "Download a backup" on the computer, then "Restore from a backup" on the tablet.
+
 ## How the code is organized
 
 ```
 index.html            App shell: sidebar, top bar, <main> where views are rendered
+manifest.webmanifest  Name, icons and colors for installing the app on a home screen
+sw.js                 Service worker: offline cache (network first, stored copy as fallback)
+icons/                App icon (SVG source + PNGs for home screens)
 css/
   tokens.css          Design tokens: colors (light + dark), type, spacing
   base.css            Reset and default element styles
@@ -60,6 +77,7 @@ js/
     store.js          The only module that touches localStorage
     events.js         Publish/subscribe event bus
     dom.js            h() element helper, icons, toast
+    offline.js        Registers the service worker; offline status for Settings
   services/           Logic with no page layout of its own
     highlighter.js    Tokenizes HTML/CSS/JS and renders highlighted HTML
     loop-guard.js     Inserts infinite-loop checks into your code before it runs
